@@ -1,5 +1,4 @@
-﻿#ifndef LCD_H
-#define LCD_H
+﻿#pragma once
 
 #include <avr/io.h>
 #define F_CPU 10000000UL
@@ -46,5 +45,3 @@ extern void lcd_clear();
 col - номер знакоместа по горизонтальной оси (от 0 до 15)
 row - номер строки (0 или 1) */
 extern void lcd_gotoxy(char col, char row);
-
-#endif
