@@ -141,6 +141,18 @@
     <Compile Include="lcd_func.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="ringbuffer.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="ringbuffer.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="usart.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="usart.h">
+      <SubType>compile</SubType>
+    </Compile> 
     <Compile Include="USART_Example.c">
       <SubType>compile</SubType>
     </Compile>
