@@ -11,119 +11,37 @@
  *          правильные положения переключателей MOSI, MISO, SCK на плате
  *          UNI-DS3.
  *
- *    TODO: Необходимо зарефакторить код, раскидав его по файлам и макросы
- *          конечно тоже ужасны. F_CPU неправильное.
+ *    Note: На плате должны быть включены переключатели ADC-CS, MOSI, MISO, SCK.
  */ 
 
 #include <avr/io.h>
-#define F_CPU 16000000UL
+#define F_CPU 10000000UL
 #include <util/delay.h>
 
-// Вывод ножки MOSI
-#define DD_MOSI      PB2
-// Вывод ножки MISO
-#define DD_SCK       PB1
-
-/* Макрос команды перевода ножки CS АЦП в
-состояние лог. "1" */
-#define ADC_CS_HIGH  DDRB |= (1<<PB0); PORTB |= (1<<PB0);
-/* Макрос команды перевода ножки CS АЦП в
-состояние лог. "0" */
-#define ADC_CS_LOW   DDRB |= (1<<PB0); PORTB &=~(1<<PB0);
-
-/* Объединение, предназначеное для передачи
-первого байта настройки АЦП */
-union{
-    struct {
-	    char d2:1;
-	    char single_channel:1;
-	    char start_bit:1;
-        char unused:5;
-    } str;
-	char chr;
-} adc_ctrl0;
-
-/* Объединение, предназначеное для передачи
-второго байта настройки АЦП */
-union {
-    struct {
-	    char unused:6;
-	    char d0:1;
-	    char d1:1;
-    } str;
-	char chr;
-} adc_ctrl1;
-
-/* Объединение, предназначеное для обработки
-результатов преобразования */
-union {
-	struct {
-		// Старшие биты преобразования
-		char data:4;
-		// Нулевой бит перед преобразованием
-		char nul:1;
-		// Пустые биты
-		char unused:3;
-	} str;
-	// Результат в виде переменной
-	char chr;
-} adc_data_high;
-
-// Младший байт преобразования
-char adc_data_low;
-
-/* Функция инициализации мастера шины SPI */
-void SPI_MasterInit(void) {
-    /* Установка выводов MOSI и SCK на вывод */
-    DDRB = (1<<DD_MOSI)|(1<<DD_SCK);
-    /* Включение SPI, режима ведущего, и установка
-	частоты тактирования fclk/128 */
-    SPCR = (1<<SPE)|(1<<MSTR)|(1<<SPR1)|(1<<SPR0);
-};
-
-/* Функция передачи байта данных outData. Ожидает окончания
-передачи и возвращает принятый по ножке MOSI байт */
-unsigned char SPI_MasterTransmit(char outData) {
-    /* Начало передачи */
-    SPDR = outData;
-    /* Ожидание окончания передачи */
-    while(!(SPSR & (1<<SPIF))) ;
-	return SPDR;
-};
+#include "spi.h"
+#include "mcp3204.h"
 
 int main(void) {
-	SPI_MasterInit();
-	
 	DDRC = 0xFF;
 	DDRD = 0xFF;
 	
-    /* Если АЦП был запущен с ножкой CS в
-	состоянии лог. "0", то нужно перещелкнуть
-	ее и оставить в рабочем положении лог. "1" */
-	ADC_CS_HIGH;
-	ADC_CS_LOW;
-	ADC_CS_HIGH;
+	SpiConfig_t spi_config = {
+		.clk    = SPI_SCK_F_DIV_128,
+		.master = SPI_MASTER_MODE,
+		.mode   = SPI_MODE_00,
+		.order  = SPI_DATA_ORDER_MSB_FIRST
+	};
 	
-	/* Заполнение контрольных байт */
-	adc_ctrl0.str.unused=0;
-	adc_ctrl0.str.start_bit=1;
-	adc_ctrl0.str.single_channel=0;
-	adc_ctrl0.str.d2=0;
-	adc_ctrl1.str.d0=0;
-	adc_ctrl1.str.d1=1;
-	adc_ctrl1.str.unused=0;
+	spi_init(&spi_config);
+	spi_enable();
+	
+	mcp3204_init();
 	
     while(1) {
-        /* Передача данных */ 
-		ADC_CS_LOW;
-	    SPI_MasterTransmit(adc_ctrl0.chr);
-	    adc_data_high.chr=SPI_MasterTransmit(adc_ctrl1.chr);
-	    adc_data_low=SPI_MasterTransmit(0);
-		ADC_CS_HIGH;
-		
+		uint16_t adc_result = mcp3204_read(MCP3204_CHANNEL_CH1);
 		/* Отображение данных */
-		PORTC = adc_data_high.str.data;
-		PORTD = adc_data_low;
+		PORTC = adc_result;
+		PORTD = adc_result >> 8;
 		
 		_delay_ms(100);
     }
