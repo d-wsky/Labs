@@ -22,9 +22,13 @@
 #include "mcp3204.h"
 
 int main(void) {
+	/* 0. Подготовка используемых средств к работе.*/
+	
+	/* На эти ножки выводится результат преобразования.*/
 	DDRC = 0xFF;
 	DDRD = 0xFF;
 	
+	/* Подготовка модуля интерфейса SPI к работе.*/
 	SpiConfig_t spi_config = {
 		.clk    = SPI_SCK_F_DIV_128,
 		.master = SPI_MASTER_MODE,
@@ -35,14 +39,18 @@ int main(void) {
 	spi_init(&spi_config);
 	spi_enable();
 	
+	/* Инициализация микросхемы АЦП.*/
 	mcp3204_init();
 	
     while(1) {
+		/* 1. Чтение данных.*/
 		uint16_t adc_result = mcp3204_read(MCP3204_CHANNEL_CH1);
-		/* Отображение данных */
+
+		/* 2. Отображение данных.*/
 		PORTC = adc_result;
 		PORTD = adc_result >> 8;
 		
+		/* 3. Пауза.*/
 		_delay_ms(100);
     }
 }

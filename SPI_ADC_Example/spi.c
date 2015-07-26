@@ -16,10 +16,7 @@ void spi_init(SpiConfig_t* config) {
     SPCR = (config->mode)|(config->clk)|(config->order)|(config->master);
 }
 
-/*! \brief Функция передачи байта данных outData.
- *
- * Использует блокирующее ожидание окончания передачи и возвращает принятый
- * обратно по ножке MOSI байт.*/
+/* Функция передачи байта данных outData и приема возвратного байта.*/
 unsigned char spi_write_blocking(char outData) {
 	/* Начало передачи */
 	SPDR = outData;

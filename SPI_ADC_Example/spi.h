@@ -16,35 +16,41 @@
 // Вывод ножки MISO
 #define SPI_SCK_PIN       PB1
 
+/*! \brief Тип данных, используемый для выбора режима ведущий-ведомый.*/
 typedef enum {
-	SPI_MASTER_MODE  =   (1 << MSTR),
-	SPI_SLAVE_MODE   =   (0 << MSTR) /*< experimental */
+	SPI_MASTER_MODE  =   (1 << MSTR), /*!< Режим ведущего.*/
+	SPI_SLAVE_MODE   =   (0 << MSTR)  /*!< Режим ведомого (experimental).*/
 } SpiMasterSlaveMode_t;
 
+/*! \brief Тип данных, используемый для выбора тактовой скорости соединения.*/
 typedef enum {
-	SPI_SCK_F_DIV_4   =   (0 << SPR1) | (0 << SPR0),
-	SPI_SCK_F_DIV_16  =   (0 << SPR1) | (1 << SPR0),
-	SPI_SCK_F_DIV_64  =   (1 << SPR1) | (0 << SPR0),
-	SPI_SCK_F_DIV_128 =   (1 << SPR1) | (1 << SPR0)
+	SPI_SCK_F_DIV_4   =   (0 << SPR1) | (0 << SPR0), /*!< F_CPU/4.*/
+	SPI_SCK_F_DIV_16  =   (0 << SPR1) | (1 << SPR0), /*!< F_CPU/16.*/
+	SPI_SCK_F_DIV_64  =   (1 << SPR1) | (0 << SPR0), /*!< F_CPU/64.*/
+	SPI_SCK_F_DIV_128 =   (1 << SPR1) | (1 << SPR0)  /*!< F_CPU/128.*/
 } SpiClock_t;
 
+/*! \brief Тип данных, используемый для выбора режима тактирования данных.*/
 typedef enum {
-	SPI_MODE_00       =   (0 << CPOL) | (0 << CPHA),
-	SPI_MODE_01       =   (0 << CPOL) | (1 << CPHA),
-	SPI_MODE_10       =   (1 << CPOL) | (0 << CPHA),
-	SPI_MODE_11       =   (1 << CPOL) | (1 << CPHA),
+	SPI_MODE_00       =   (0 << CPOL) | (0 << CPHA), /*!< Исходный уровень - низкий, установка по заднему фронту, выборка - по переднему.*/
+	SPI_MODE_01       =   (0 << CPOL) | (1 << CPHA), /*!< Исходный уровень - низкий, установка по переднему фронту, выборка - по заднему.*/
+	SPI_MODE_10       =   (1 << CPOL) | (0 << CPHA), /*!< Исходный уровень - высокий, установка по заднему фронту, выборка - по переднему.*/
+	SPI_MODE_11       =   (1 << CPOL) | (1 << CPHA), /*!< Исходный уровень - высокий, установка по переднему фронту, выборка - по заднему.*/
 } SpiMode_t;
 
+/*! \brief Тип данных, используемый для выбора порядка передачи данных
+ * в кадре.*/
 typedef enum {
-	SPI_DATA_ORDER_MSB_FIRST =  (0 << DORD),
-	SPI_DATA_ORDER_LSB_FIRST =  (1 << DORD),
+	SPI_DATA_ORDER_MSB_FIRST =  (0 << DORD), /*!< Первым выходит старший бит.*/
+	SPI_DATA_ORDER_LSB_FIRST =  (1 << DORD), /*!< Первым выходит младший бит.*/
 } SpiDataOrder_t;
 
+/*! \brief Структура, содержащая полную конфигурацию аппаратного модуля SPI.*/
 typedef struct {
-	SpiMasterSlaveMode_t  master;
-	SpiClock_t            clk;
-	SpiMode_t             mode;
-	SpiDataOrder_t        order;
+	SpiMasterSlaveMode_t  master; /*!< Ведущий-ведомый.*/
+	SpiClock_t            clk;    /*!< Частота тактирования данных.*/
+	SpiMode_t             mode;   /*!< Режим тактирования.*/
+	SpiDataOrder_t        order;  /*!< Порядок передачи бит.*/
 } SpiConfig_t;
 
 /*! \brief Функция инициализации шины SPI в режиме мастера.*/
