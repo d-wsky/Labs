@@ -24,6 +24,8 @@ Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "I2C_RTC_Read_Example", "I2C
 EndProject
 Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "LCD_Lib_Using_Example", "LCD_Lib_Using_Example\LCD_Lib_Using_Example.cproj", "{B9E88175-0A99-45C8-BE49-E07BCA08B829}"
 EndProject
+Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "SPI_DAC_Example", "SPI_DAC_Example\SPI_DAC_Example.cproj", "{CAD91A24-A324-4D99-9308-C74BE65D8257}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|AVR = Debug|AVR
@@ -78,6 +80,10 @@ Global
 		{B9E88175-0A99-45C8-BE49-E07BCA08B829}.Debug|AVR.Build.0 = Debug|AVR
 		{B9E88175-0A99-45C8-BE49-E07BCA08B829}.Release|AVR.ActiveCfg = Release|AVR
 		{B9E88175-0A99-45C8-BE49-E07BCA08B829}.Release|AVR.Build.0 = Release|AVR
+		{CAD91A24-A324-4D99-9308-C74BE65D8257}.Debug|AVR.ActiveCfg = Debug|AVR
+		{CAD91A24-A324-4D99-9308-C74BE65D8257}.Debug|AVR.Build.0 = Debug|AVR
+		{CAD91A24-A324-4D99-9308-C74BE65D8257}.Release|AVR.ActiveCfg = Release|AVR
+		{CAD91A24-A324-4D99-9308-C74BE65D8257}.Release|AVR.Build.0 = Release|AVR
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

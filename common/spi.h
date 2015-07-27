@@ -3,8 +3,7 @@
  *
  * Created: 16-Jul-15 23:17:37
  *  Author: Denis Vasilkovsky
- */ 
-
+ */
 
 #ifndef SPI_H_
 #define SPI_H_
@@ -15,6 +14,8 @@
 #define SPI_MOSI_PIN      PB2
 // Вывод ножки MISO
 #define SPI_SCK_PIN       PB1
+// Вывод ножки SS
+#define SPI_SS_PIN        PB0
 
 /*! \brief Тип данных, используемый для выбора режима ведущий-ведомый.*/
 typedef enum {
