@@ -13,7 +13,7 @@
 
 #include <avr/io.h>
 #include <avr/interrupt.h>
-#include "lcd_func.h"
+#include "hd44780.h"
 #include "usart.h"
 
 int main(void) {
@@ -26,8 +26,8 @@ int main(void) {
 	stdout = &uart0_iostream;
 	stdin = &uart0_iostream;
 	/* Инициализация и очистка дисплея */
-	lcd_init(Phys8Bit2Row5x8, OutNorm, CursorMode1Blink);
-	lcd_clear();
+	hd44780_init(Phys2Row5x8, OutNorm, CursorMode1Blink);
+	hd44780_clear();
 	
 	sei();
 	
@@ -40,7 +40,7 @@ int main(void) {
     	/* Проверяем приемный буфер */
 		dat = getchar();
 		/* Когда поступит новый символ, выводим его на ЖКИ и в USART */
-		lcd_putc(dat);
+		hd44780_putc(dat);
 		putchar(dat);
 	};
 }

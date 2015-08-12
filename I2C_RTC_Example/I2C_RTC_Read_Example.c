@@ -14,17 +14,11 @@
  */ 
 
 #include <avr/io.h>
-#include "lcd_func.h"
+#include <util/delay.h>
+#include "hd44780.h"
 
 /* Адрес микросхемы PCF8583 на шине I2C */
 #define RTC_ADDR  0b10100000
-
-/* инициализация портов, подключенных к жки */
-void init_port()
-{
-    PORTC=0x00;
-    DDRC=0xFF;
-}
 
 /* Передача команды СТАРТ на шину */
 void I2C_StartCondition(void)
@@ -109,37 +103,44 @@ void get_time(void) {
 	I2C_StopCondition();
 }
 
+/* переводит входное число в формате BCD в сторку
+str длиной два символа с ведущим нулем */
+void bcd_to_str(uint8_t num, char* str) {
+	str[0] = (num >> 4) + 0x30;
+	str[1] = (num & 0x0F) + 0x30;
+}
+
 /* Функция вывода времени на ЖКИ */
 void put_time(void) {
 	/* Первая строка: время */
-	lcd_gotoxy(0,0);
+	hd44780_gotoxy(0,0);
+	char buf[4] = {' ', ' ', ':', '\0'};
 	/* Часы */
-	lcd_putc(((hour>>4)&0x03)+0x30);
-	lcd_putc((hour&0x0F)+0x30);
-	lcd_putc(':');
+	bcd_to_str(hour, buf);
+	hd44780_puts(buf);
 	/* Минуты */
-	lcd_putc((min>>4)+0x30);
-	lcd_putc((min&0x0F)+0x30);
-	lcd_putc(':');
+	bcd_to_str(min, buf);
+	hd44780_puts(buf);
 	/* Секунды */
-	lcd_putc((sec>>4)+0x30);
-	lcd_putc((sec&0x0F)+0x30);
+	bcd_to_str(sec, buf);
+	buf[2] = '\0';
+	hd44780_puts(buf);
 	/* Вторая строка: дата */
-	lcd_gotoxy(0, 1);
+	hd44780_gotoxy(0, 1);
+	buf[2] = '/';
 	/* Число */
-	lcd_putc(((year_date>>4)&0x03)+0x30);
-	lcd_putc((year_date&0x0F)+0x30);
-	lcd_putc('/');
+	bcd_to_str(year_date & 0x03, buf);
+	hd44780_puts(buf);
 	/* Месяц */
-	lcd_putc(((day_month>>4)&0x03)+0x30);
-	lcd_putc((day_month&0x0F)+0x30);
+	bcd_to_str(day_month & 0x03, buf);
+	buf[2] = '\0';
+	hd44780_puts(buf);
 }
 
 int main(void)
 {
-	init_port();
-    lcd_init();
-	lcd_clear();
+	hd44780_init(Phys2Row5x8, OutNorm, CursorMode2);
+	hd44780_clear();
 	
 	/* Инициализация обмена по TWI на 100 кГц */
     TWBR=0x2A;
@@ -154,6 +155,8 @@ int main(void)
 		 HH:MM:SS
 		 DD/MM */
 		put_time();
+		
+		_delay_ms(500);
 	};
 	
 	return 0;
