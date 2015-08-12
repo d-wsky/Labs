@@ -148,6 +148,12 @@
       <SubType>compile</SubType>
       <Link>hd44780.h</Link>
     </Compile>
+    <Compile Include="i2c.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="i2c.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="I2C_RTC_Read_Example.c">
       <SubType>compile</SubType>
     </Compile>
