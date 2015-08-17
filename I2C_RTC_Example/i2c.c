@@ -14,14 +14,14 @@
 /*! \brief Макрос описывает состояние TWSR после успешного
 перехода шины I2C в состояние повторного \a START.*/
 #define	 I2C_REPEAT_START			0x10
-/*! \brief Макрос описывает состояние TWSR после успешной
-отправки байта адреса по шине I2C в режиме мастера.*/
+/*! \brief Макрос описывает состояние TWSR после успешного
+приема ведомым байта адреса на запись по шине I2C.*/
 #define  I2C_MAS_TX_SLA_ACK			0x18
 /*! \brief Макрос описывает состояние TWSR после успешного
-приема байта адреса по шине I2C в режиме мастера.*/
+приема ведомым байта адреса на чтение по шине I2C.*/
 #define  I2C_MAS_RX_SLA_ACK			0x40
 /*! \brief Макрос описывает состояние TWSR после успешной
-передачи байта данных по шине I2C.*/
+передачи байта данных на запись по шине I2C.*/
 #define  I2C_MAS_TX_DATA_ACK		0x28
 /*! \brief Макрос описывает состояние TWSR после успешного
 приема байта данных по шине I2C с установкой \a ACK.*/
@@ -33,6 +33,7 @@
 #define STATUS_MASK            0xF8
 #define STATUS_IS(x)         ((TWSR & STATUS_MASK) == x)
 #define IS_READ_ADDRESS(x)    (x & 1)
+
 
 /* Инициализация внутреннего приемопередатчика I2C.*/
 void i2c_init(unsigned long freq) {
@@ -173,4 +174,16 @@ size_t i2c_read_multiple(unsigned char* data, const size_t len) {
 		rx_count++;
 	}
 	return rx_count;
+}
+
+/* Функция чтения нескольких байт подряд.*/
+size_t i2c_write_multiple(unsigned char* data, const size_t len) {
+	size_t tx_count = 0;
+	for (size_t i = 0; i < len; i++) {
+		if (i2c_write_byte(*data++) == I2C_STATUS_ERROR) {
+			return tx_count;
+		}
+		tx_count++;
+	}
+	return tx_count;
 }

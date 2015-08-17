@@ -157,6 +157,12 @@
     <Compile Include="I2C_RTC_Read_Example.c">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="pcf8583.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="pcf8583.h">
+      <SubType>compile</SubType>
+    </Compile>
   </ItemGroup>
   <Import Project="$(AVRSTUDIO_EXE_PATH)\\Vs\\AvrGCC.targets" />
 </Project>
