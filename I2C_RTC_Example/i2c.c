@@ -30,10 +30,12 @@
 приема байта данных по шине I2C с установкой \a NACK.*/
 #define  I2C_MAS_RX_DATA_NACK		0x58
 
+/* маска для определения значения статуса */
 #define STATUS_MASK            0xF8
+/* текущее значение статуса модуля i2c */
 #define STATUS_IS(x)         ((TWSR & STATUS_MASK) == x)
+/* возвращает истину, если входной параметр является адресом на чтение */
 #define IS_READ_ADDRESS(x)    (x & 1)
-
 
 /* Инициализация внутреннего приемопередатчика I2C.*/
 void i2c_init(unsigned long freq) {

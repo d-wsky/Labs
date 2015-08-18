@@ -30,6 +30,24 @@ typedef enum {
 	              после завершения приема.*/
 } i2c_ack_t;
 
+/*! \brief Удобный макрос для выполнения одного действия внутри
+функции, многократно обращающейся к шине I2C и желающей немедленного
+выхода в случае возникновения проблем.
+
+\param x - любая из операций данного драйвера, возвращающая статус.
+
+Пример использования:
+
+\code
+i2c_status_t write_func(uint8_t some_addr, uint8_t some_data) {
+	I2C_TRY_ACTION(i2c_start());
+	I2C_TRY_ACTION(i2c_write_addr(some_addr));
+	I2C_TRY_ACTION(i2c_write_byte(some_data));
+	I2C_TRY_ACTION(i2c_stop());
+	return I2C_STATUS_OK;
+}
+\endcode
+*/
 #define I2C_TRY_ACTION(x)                    \
     do { if (x == I2C_STATUS_ERROR)          \
          return I2C_STATUS_ERROR; } while (0)
@@ -108,4 +126,5 @@ size_t i2c_read_multiple(unsigned char* data, size_t len);
 В случае отсутствия бита подтверждения от ведомого устройства, данная
 функция рвет передачу.*/
 size_t i2c_write_multiple(unsigned char* data, const size_t len);
+
 #endif /* I2C_H_ */

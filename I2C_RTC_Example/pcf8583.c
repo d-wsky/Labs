@@ -34,14 +34,17 @@ i2c_status_t pcf8583_read_multiple(const uint8_t addr, uint8_t* data, const size
 	return I2C_STATUS_OK;
 }
 
+/* склейка трех аргументов */
 #define CONCAT_3(p1, p2, p3)           p1##p2##p3
+/* распаковка данных из часов в структуру */
 #define UNPACK_FIELD(from, field)    ((from[CONCAT_3(PCF8583_, field, _REG)] & CONCAT_3(PCF8583_, field, _MASK)) >> CONCAT_3(PCF8583_, field, _POS))
+/* упаковка данных из структуры в регистр часов */
 #define PACK_FIELD(to, from, field)    do \
                                        {  to[CONCAT_3(PCF8583_, field, _REG)] |= \
                                          ((from << CONCAT_3(PCF8583_, field, _POS)) & CONCAT_3(PCF8583_, field, _MASK)); \
                                        } while (0)
   
-
+/* чтение времени */
 i2c_status_t pcf8583_read_time(pcf8583_time_t* t) {
 	uint8_t packed_time[PCF8583_PACKED_TIME_LEN];
 	i2c_status_t res = pcf8583_read_multiple(PCF8583_TIME_ADDR, packed_time, sizeof(packed_time));
@@ -62,6 +65,7 @@ i2c_status_t pcf8583_read_time(pcf8583_time_t* t) {
 	return res;
 }
 
+/* запись последовательности байт */
 i2c_status_t pcf8583_write_multiple(const uint8_t addr, uint8_t* data, const size_t len) {
 	I2C_TRY_ACTION(i2c_start());
 	I2C_TRY_ACTION(i2c_write_addr(PCF8583_ADDR_WRITE));
@@ -71,6 +75,7 @@ i2c_status_t pcf8583_write_multiple(const uint8_t addr, uint8_t* data, const siz
 	return I2C_STATUS_OK;
 }
 
+/* запись нового времени в часы */
 i2c_status_t pcf8583_write_time(const pcf8583_time_t* t) {
 	uint8_t packed_time[PCF8583_PACKED_TIME_LEN] = {0};
 	
@@ -92,6 +97,7 @@ i2c_status_t pcf8583_write_time(const pcf8583_time_t* t) {
 	return res;
 }
 
+/* запись байта в часы */
 i2c_status_t pcf8583_write(const uint8_t addr, const uint8_t data) {
 	I2C_TRY_ACTION(i2c_start());
 	I2C_TRY_ACTION(i2c_write_addr(PCF8583_ADDR_WRITE));
@@ -101,6 +107,7 @@ i2c_status_t pcf8583_write(const uint8_t addr, const uint8_t data) {
 	return I2C_STATUS_OK;
 }
 
+/* чтение байта из часов */
 i2c_status_t pcf8583_read(const uint8_t addr, uint8_t* data) {
 	I2C_TRY_ACTION(i2c_start());
 	I2C_TRY_ACTION(i2c_write_addr(PCF8583_ADDR_WRITE));
