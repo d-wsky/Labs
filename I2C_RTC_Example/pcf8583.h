@@ -11,6 +11,7 @@
 
 #include "i2c.h"
 #include <stdint.h>
+#include <stdbool.h>
 
 /*! \brief Адрес микросхемы PCF8583 на шине I2C */
 #define PCF8583_ADDR  0b10100000
@@ -33,7 +34,7 @@ typedef enum {
 Для всех полей предполагается представление BCD, кроме случаев,
 указанных отдельно.*/
 typedef struct {
-	unsigned char msec;  /*!< Миллисекунды (0x00 - 0x99).*/
+	unsigned char hsec;  /*!< Сотые доли секунды (0x00 - 0x99).*/
 	unsigned char sec;   /*!< Секунды (0x00 - 0x59).*/
 	unsigned char min;   /*!< Минуты (0x00 - 0x59).*/
 	unsigned char hour;  /*!< Часы (0x00 - 0x12 или 0x24).*/
@@ -50,8 +51,8 @@ typedef struct {
 } pcf8583_time_t;
 
 /* Вспомогательные макросы для работы с часами.*/
-#define PCF8583_MSEC_MASK           (0xFF)
-#define PCF8583_MSEC_POS             0
+#define PCF8583_HSEC_MASK           (0xFF)
+#define PCF8583_HSEC_POS             0
 
 #define PCF8583_SEC_MASK            (0xFF)
 #define PCF8583_SEC_POS              0
@@ -85,15 +86,37 @@ typedef enum {
 	PCF8583_FORMAT_12H   = 1 << PCF8583_FORMAT_POS  /*!< 12-часовой формат.*/
 } pcf8583_format_t;
 
-#define PCF8583_FUNCTION_POS     4
+#define PCF8583_MODE_POS     4
 
 /*! \brief Выбирает режим работы часов.*/
 typedef enum {
-	PCF8583_FUNCTION_32K       = 0 << PCF8583_FUNCTION_POS, /*!< Часы от кварца 32768 Гц.*/
-	PCF8583_FUNCTION_50HZ      = 1 << PCF8583_FUNCTION_POS, /*!< Часы от сети 50 Гц.*/
-	PCF8583_FUNCTION_COUNTER   = 2 << PCF8583_FUNCTION_POS, /*!< Счетчик.*/
-	PCF8583_FUNCTION_TEST_MODE = 3 << PCF8583_FUNCTION_POS, /*!< Тестовый режим.*/
-} pcf8583_function_t;
+	PCF8583_MODE_32K       = 0 << PCF8583_MODE_POS, /*!< Часы от кварца 32768 Гц.*/
+	PCF8583_MODE_50HZ      = 1 << PCF8583_MODE_POS, /*!< Часы от сети 50 Гц.*/
+	PCF8583_MODE_COUNTER   = 2 << PCF8583_MODE_POS, /*!< Счетчик.*/
+	PCF8583_MODE_TEST      = 3 << PCF8583_MODE_POS, /*!< Тестовый режим.*/
+} pcf8583_mode_t;
+
+#define PCF8583_ALARM_FUNC_POS    4
+
+/*! \brief Задает режим срабатывания будильника.*/
+typedef enum {
+	PCF8583_ALARM_FUNC_OFF     = 0 << PCF8583_ALARM_FUNC_POS, /*!< Будильник отключен.*/
+	PCF8583_ALARM_FUNC_DAILY   = 1 << PCF8583_ALARM_FUNC_POS, /*!< Будильник срабатывает ежедневно.*/
+	PCF8583_ALARM_FUNC_WEEKDAY = 2 << PCF8583_ALARM_FUNC_POS, /*!< Будильник по дням недели.*/
+	PCF8583_ALARM_FUNC_DATED   = 3 << PCF8583_ALARM_FUNC_POS, /*!< Будильник срабатывает в заданную дату.*/
+} pcf8583_alarm_func_t;
+
+#define PCF8583_TIMER_FUNC_POS    0
+
+/*! \brief Задает скорость счета таймера.*/
+typedef enum {
+	PCF8583_TIMER_FUNC_OFF     = 0 << PCF8583_TIMER_FUNC_POS, /*!< Таймер отключен.*/
+	PCF8583_TIMER_FUNC_HSEC    = 1 << PCF8583_TIMER_FUNC_POS, /*!< Таймер отсчитывает сотые доли секунды.*/
+	PCF8583_TIMER_FUNC_SEC     = 2 << PCF8583_TIMER_FUNC_POS, /*!< Таймер отсчитывает секунды.*/
+	PCF8583_TIMER_FUNC_MIN     = 3 << PCF8583_TIMER_FUNC_POS, /*!< Таймер отсчитывает минуты.*/
+	PCF8583_TIMER_FUNC_HOUR    = 4 << PCF8583_TIMER_FUNC_POS, /*!< Таймер отсчитывает часы.*/
+	PCF8583_TIMER_FUNC_DAY     = 5 << PCF8583_TIMER_FUNC_POS, /*!< Таймер отсчитывает дни.*/
+} pcf8583_timer_func_t;
 
 /*! \brief На данном регистре формируется прямоугольный
 сигнал длительностью секунда и заполнением 50%, если
@@ -123,11 +146,44 @@ i2c_status_t pcf8583_start();
 i2c_status_t pcf8583_stop();
 
 /*! \brief Выбор режима работы часов. Отсутствует реализация.*/
-i2c_status_t pcf8583_set_function(pcf8583_function_t* function);
+i2c_status_t pcf8583_set_mode(pcf8583_mode_t mode);
 
 /*! \brief Выбор формата представления времени (12-часовой или 24-часовой).
 Отсутствует реализация.*/
-i2c_status_t pcf8583_set_format(pcf8583_format_t* format);
+i2c_status_t pcf8583_set_format(pcf8583_format_t format);
+
+/*! \brief Функция установки режима будильника. Отсутствует реализация.
+
+\param func - режим работы будильника.*/
+i2c_status_t pcf8583_set_alarm_func(const pcf8583_alarm_func_t func);
+
+/*! \brief Функция установки времени будильника. Отсутствует реализация.
+
+\param alarm_time - время срабатывания. Если устанавливается ежедневный режим,
+то поля даты и дня недели могут быть проигнорированы.
+\param dow - при настройке будильника по дням недели в этот параметр передаются
+желаемые дни, объединенные через побитовое И.
+\param irq_enable - разрешение прерывания при срабатывании будильника. Если
+отключено, то об этом можно узнать прочитав AF из регистра статуса.*/
+i2c_status_t pcf8583_set_alarm(const pcf8583_time_t* alarm_time,
+                               const pcf8583_dow_t dow,
+                               bool irq_enable);
+
+/*! \brief Функция установки режима таймера. Отсутствует реализация.
+
+\param func - режим работы таймера.*/
+i2c_status_t pcf8583_set_timer_func(const pcf8583_timer_func_t func);
+
+/*! \brief Функция установки таймера. Отсутствует реализация.
+
+\param timer_timeout - число в формате BCD от 0x00 до 0x99, которое будет
+задавать начальное значение таймера. Скорость счета таймера задается с помощью
+\a pcf8583_set_timer_func, и когда он переключится из 0x00 в 0x99 возникнет
+прерывание.
+\param irq_enable - разрешение прерывания при срабатывании будильника. Если
+отключено, то об этом можно узнать прочитав TF из регистра статуса.*/
+i2c_status_t pcf8583_set_timer(const uint8_t timer_timeout,
+                               bool irq_enable);
 
 /*! \brief Чтение времени из часов.
 
@@ -139,6 +195,18 @@ i2c_status_t pcf8583_read_time(pcf8583_time_t* t);
 
 \param t - указатель на переменную хранящую желаемое время.*/
 i2c_status_t pcf8583_write_time(const pcf8583_time_t* t);
+
+/*! \brief Чтение показаний счетчика из часов. Отсутствует реализация.
+
+\param cnt - в эту переменную будет возвращен результат чтения, если
+оно прошло верно.*/
+i2c_status_t pcf8583_read_counter(uint32_t* cnt);
+
+/*! \brief Установка нового значения счетчика, при работе часов
+в режиме счетчика. Отсутствует реализация.
+
+\param cnt - указатель на переменную хранящую желаемое число.*/
+i2c_status_t pcf8583_write_counter(const uint32_t* cnt);
 
 /*! \brief Чтение данных из произвольной ячейки памяти часов.
 

@@ -35,11 +35,11 @@ void put_time(pcf8583_time_t* t) {
 		const size_t HOUR_POS = 0;
 		const size_t MIN_POS = 3;
 		const size_t SEC_POS = 6;
-		const size_t MSEC_POS = 9;
+		const size_t HSEC_POS = 9;
 		bcd_to_str(t->hour, &buf[HOUR_POS]);
 		bcd_to_str(t->min,  &buf[MIN_POS]);
 		bcd_to_str(t->sec,  &buf[SEC_POS]);
-		bcd_to_str(t->msec, &buf[MSEC_POS]);
+		bcd_to_str(t->hsec, &buf[HSEC_POS]);
 		hd44780_puts(buf);
 	}
 	/* Вторая строка: дата */

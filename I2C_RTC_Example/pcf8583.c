@@ -11,7 +11,7 @@
 #define PCF8583_ADDR_WRITE       (PCF8583_ADDR | 0)
 
 #define PCF8583_TIME_ADDR              1
-#define PCF8583_MSEC_REG               0
+#define PCF8583_HSEC_REG               0
 #define PCF8583_SEC_REG                1
 #define PCF8583_MIN_REG                2
 #define PCF8583_HOURS_REG              3
@@ -52,7 +52,7 @@ i2c_status_t pcf8583_read_time(pcf8583_time_t* t) {
 		return res;
 	}
 	
-	t->msec  = UNPACK_FIELD(packed_time, MSEC);
+	t->hsec  = UNPACK_FIELD(packed_time, HSEC);
 	t->sec   = UNPACK_FIELD(packed_time, SEC);
 	t->min   = UNPACK_FIELD(packed_time, MIN);
 	t->hour  = UNPACK_FIELD(packed_time, HOURS);
@@ -79,7 +79,7 @@ i2c_status_t pcf8583_write_multiple(const uint8_t addr, uint8_t* data, const siz
 i2c_status_t pcf8583_write_time(const pcf8583_time_t* t) {
 	uint8_t packed_time[PCF8583_PACKED_TIME_LEN] = {0};
 	
-	PACK_FIELD(packed_time, t->msec,  MSEC);
+	PACK_FIELD(packed_time, t->hsec,  HSEC);
 	PACK_FIELD(packed_time, t->sec,   SEC);
 	PACK_FIELD(packed_time, t->min,   MIN);
 	PACK_FIELD(packed_time, t->hour,  HOURS);
