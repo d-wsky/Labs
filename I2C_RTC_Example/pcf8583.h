@@ -16,6 +16,109 @@
 /*! \brief Адрес микросхемы PCF8583 на шине I2C */
 #define PCF8583_ADDR  0b10100000
 
+//------------------------------------
+// Регистр управления/состояния
+//------------------------------------
+
+/*! \brief На данном регистре формируется прямоугольный
+сигнал длительностью секунда и заполнением 50%, если
+отключен сигнал будильника.*/
+#define PCF8583_TIMER_FLAG      (1 << 0)
+/*! \brief На данном регистре формируется прямоугольный
+сигнал длительностью секунда и заполнением 50%, если
+отключен сигнал будильника.*/
+#define PCF8583_ALARM_FLAG      (1 << 1)
+/*! \brief Флаг включения будильника.*/
+#define PCF8583_ALARM_ENABLE    (1 << 2)
+/*! \brief Флаг маскирования даты и месяца.*/
+#define PCF8583_MASK_FLAG       (1 << 3)
+/*! \brief Позиция для поля режима работы.*/
+#define PCF8583_MODE_POS         4
+/*! \brief Маска выбора режима работы микросхемы.*/
+#define PCF8583_MODE_MASK       (3 << 4)
+/*! \brief Захват значения счетных регистров.
+
+Если этот бит установлен в 1, то происходит захват.*/
+#define PCF8583_HOLD_COUNT      (1 << 6)
+/*! \brief Флаг остановки счета.*/
+#define PCF8583_STOP_COUNT      (1 << 7)
+
+//------------------------------------
+// Регистры времени
+//------------------------------------
+
+/* Вспомогательные макросы для работы с часами.*/
+#define PCF8583_HSEC_MASK           (0xFF)
+#define PCF8583_HSEC_POS             0
+
+#define PCF8583_SEC_MASK            (0xFF)
+#define PCF8583_SEC_POS              0
+
+#define PCF8583_MIN_MASK            (0xFF)
+#define PCF8583_MIN_POS              0
+
+#define PCF8583_HOURS_MASK          (0x3F)
+#define PCF8583_HOURS_POS            0
+
+#define PCF8583_AM_PM_POS            6
+#define PCF8583_AM_PM_MASK          (1 << PCF8583_AM_PM_POS)
+
+#define PCF8583_FORMAT_POS           7
+
+#define PCF8583_DAYS_POS            (0)
+#define PCF8583_DAYS_MASK           (0x3F)
+
+#define PCF8583_YEARS_POS            6
+#define PCF8583_YEARS_MASK          (3 << PCF8583_YEARS_POS)
+
+#define PCF8583_MONTHS_POS           0
+#define PCF8583_MONTHS_MASK         (0x1F)
+
+#define PCF8583_DOW_POS              5
+#define PCF8583_DOW_MASK            (7 << PCF8583_DOW_POS)
+
+//------------------------------------
+// Регистры управления будильником
+//------------------------------------
+#define PCF8583_ALARM_FUNC_POS       4
+#define PCF8583_TIMER_FUNC_POS       0
+
+//------------------------------------
+// Вспомогательные типы данных
+//------------------------------------
+
+/*! \brief Выбирает формат представления часов.*/
+typedef enum {
+	PCF8583_FORMAT_24H   = 0 << PCF8583_FORMAT_POS, /*!< 24-часовой формат.*/
+	PCF8583_FORMAT_12H   = 1 << PCF8583_FORMAT_POS  /*!< 12-часовой формат.*/
+} pcf8583_format_t;
+
+/*! \brief Выбирает режим работы часов.*/
+typedef enum {
+	PCF8583_MODE_32K       = 0 << PCF8583_MODE_POS, /*!< Часы от кварца 32768 Гц.*/
+	PCF8583_MODE_50HZ      = 1 << PCF8583_MODE_POS, /*!< Часы от сети 50 Гц.*/
+	PCF8583_MODE_COUNTER   = 2 << PCF8583_MODE_POS, /*!< Счетчик.*/
+	PCF8583_MODE_TEST      = 3 << PCF8583_MODE_POS, /*!< Тестовый режим.*/
+} pcf8583_mode_t;
+
+/*! \brief Задает режим срабатывания будильника.*/
+typedef enum {
+	PCF8583_ALARM_FUNC_OFF     = 0 << PCF8583_ALARM_FUNC_POS, /*!< Будильник отключен.*/
+	PCF8583_ALARM_FUNC_DAILY   = 1 << PCF8583_ALARM_FUNC_POS, /*!< Будильник срабатывает ежедневно.*/
+	PCF8583_ALARM_FUNC_WEEKDAY = 2 << PCF8583_ALARM_FUNC_POS, /*!< Будильник по дням недели.*/
+	PCF8583_ALARM_FUNC_DATED   = 3 << PCF8583_ALARM_FUNC_POS, /*!< Будильник срабатывает в заданную дату.*/
+} pcf8583_alarm_func_t;
+
+/*! \brief Задает скорость счета таймера.*/
+typedef enum {
+	PCF8583_TIMER_FUNC_OFF     = 0 << PCF8583_TIMER_FUNC_POS, /*!< Таймер отключен.*/
+	PCF8583_TIMER_FUNC_HSEC    = 1 << PCF8583_TIMER_FUNC_POS, /*!< Таймер отсчитывает сотые доли секунды.*/
+	PCF8583_TIMER_FUNC_SEC     = 2 << PCF8583_TIMER_FUNC_POS, /*!< Таймер отсчитывает секунды.*/
+	PCF8583_TIMER_FUNC_MIN     = 3 << PCF8583_TIMER_FUNC_POS, /*!< Таймер отсчитывает минуты.*/
+	PCF8583_TIMER_FUNC_HOUR    = 4 << PCF8583_TIMER_FUNC_POS, /*!< Таймер отсчитывает часы.*/
+	PCF8583_TIMER_FUNC_DAY     = 5 << PCF8583_TIMER_FUNC_POS, /*!< Таймер отсчитывает дни.*/
+} pcf8583_timer_func_t;
+
 /*! \brief Тип данных, который можно использовать для определения
 дня недели.*/
 typedef enum {
@@ -50,94 +153,10 @@ typedef struct {
 	pcf8583_dow_t dow;   /*!< День недели.*/
 } pcf8583_time_t;
 
-/* Вспомогательные макросы для работы с часами.*/
-#define PCF8583_HSEC_MASK           (0xFF)
-#define PCF8583_HSEC_POS             0
 
-#define PCF8583_SEC_MASK            (0xFF)
-#define PCF8583_SEC_POS              0
-
-#define PCF8583_MIN_MASK            (0xFF)
-#define PCF8583_MIN_POS              0
-
-#define PCF8583_HOURS_MASK          (0x3F)
-#define PCF8583_HOURS_POS            0
-
-#define PCF8583_AM_PM_POS            6
-#define PCF8583_AM_PM_MASK          (1 << PCF8583_AM_PM_POS)
-
-#define PCF8583_FORMAT_POS           7
-
-#define PCF8583_DAYS_POS            (0)
-#define PCF8583_DAYS_MASK           (0x3F)
-
-#define PCF8583_YEARS_POS            6
-#define PCF8583_YEARS_MASK          (3 << PCF8583_YEARS_POS)
-
-#define PCF8583_MONTHS_POS           0
-#define PCF8583_MONTHS_MASK         (0x1F)
-
-#define PCF8583_DOW_POS              5
-#define PCF8583_DOW_MASK            (7 << PCF8583_DOW_POS)
-
-/*! \brief Выбирает формат представления часов.*/
-typedef enum {
-	PCF8583_FORMAT_24H   = 0 << PCF8583_FORMAT_POS, /*!< 24-часовой формат.*/
-	PCF8583_FORMAT_12H   = 1 << PCF8583_FORMAT_POS  /*!< 12-часовой формат.*/
-} pcf8583_format_t;
-
-#define PCF8583_MODE_POS     4
-
-/*! \brief Выбирает режим работы часов.*/
-typedef enum {
-	PCF8583_MODE_32K       = 0 << PCF8583_MODE_POS, /*!< Часы от кварца 32768 Гц.*/
-	PCF8583_MODE_50HZ      = 1 << PCF8583_MODE_POS, /*!< Часы от сети 50 Гц.*/
-	PCF8583_MODE_COUNTER   = 2 << PCF8583_MODE_POS, /*!< Счетчик.*/
-	PCF8583_MODE_TEST      = 3 << PCF8583_MODE_POS, /*!< Тестовый режим.*/
-} pcf8583_mode_t;
-
-#define PCF8583_ALARM_FUNC_POS    4
-
-/*! \brief Задает режим срабатывания будильника.*/
-typedef enum {
-	PCF8583_ALARM_FUNC_OFF     = 0 << PCF8583_ALARM_FUNC_POS, /*!< Будильник отключен.*/
-	PCF8583_ALARM_FUNC_DAILY   = 1 << PCF8583_ALARM_FUNC_POS, /*!< Будильник срабатывает ежедневно.*/
-	PCF8583_ALARM_FUNC_WEEKDAY = 2 << PCF8583_ALARM_FUNC_POS, /*!< Будильник по дням недели.*/
-	PCF8583_ALARM_FUNC_DATED   = 3 << PCF8583_ALARM_FUNC_POS, /*!< Будильник срабатывает в заданную дату.*/
-} pcf8583_alarm_func_t;
-
-#define PCF8583_TIMER_FUNC_POS    0
-
-/*! \brief Задает скорость счета таймера.*/
-typedef enum {
-	PCF8583_TIMER_FUNC_OFF     = 0 << PCF8583_TIMER_FUNC_POS, /*!< Таймер отключен.*/
-	PCF8583_TIMER_FUNC_HSEC    = 1 << PCF8583_TIMER_FUNC_POS, /*!< Таймер отсчитывает сотые доли секунды.*/
-	PCF8583_TIMER_FUNC_SEC     = 2 << PCF8583_TIMER_FUNC_POS, /*!< Таймер отсчитывает секунды.*/
-	PCF8583_TIMER_FUNC_MIN     = 3 << PCF8583_TIMER_FUNC_POS, /*!< Таймер отсчитывает минуты.*/
-	PCF8583_TIMER_FUNC_HOUR    = 4 << PCF8583_TIMER_FUNC_POS, /*!< Таймер отсчитывает часы.*/
-	PCF8583_TIMER_FUNC_DAY     = 5 << PCF8583_TIMER_FUNC_POS, /*!< Таймер отсчитывает дни.*/
-} pcf8583_timer_func_t;
-
-/*! \brief На данном регистре формируется прямоугольный
-сигнал длительностью секунда и заполнением 50%, если
-отключен сигнал будильника.*/
-#define PCF8583_TIMER_FLAG      (1 << 0)
-/*! \brief На данном регистре формируется прямоугольный
-сигнал длительностью секунда и заполнением 50%, если
-отключен сигнал будильника.*/
-#define PCF8583_ALARM_FLAG      (1 << 1)
-/*! \brief Флаг включения будильника.*/
-#define PCF8583_ALARM_ENABLE    (1 << 2)
-/*! \brief Флаг маскирования даты и месяца.*/
-#define PCF8583_MASK_FLAG       (1 << 3)
-/*! \brief Маска выбора режима работы микросхемы.*/
-#define PCF8583_FUNCTION_MASK   (3 << 4)
-/*! \brief Захват значения счетных регистров.
-
-Если этот бит установлен в 1, то происходит захват.*/
-#define PCF8583_HOLD_COUNT      (1 << 6)
-/*! \brief Флаг остановки счета.*/
-#define PCF8583_STOP_COUNT      (1 << 7)
+//------------------------------------
+// Публичные функции
+//------------------------------------
 
 /*! \brief Функция запуска часов. Отсутствует реализация.*/
 i2c_status_t pcf8583_start();
