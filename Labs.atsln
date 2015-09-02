@@ -26,6 +26,8 @@ Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "LCD_Lib_Using_Example", "LC
 EndProject
 Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "SPI_DAC_Example", "SPI_DAC_Example\SPI_DAC_Example.cproj", "{CAD91A24-A324-4D99-9308-C74BE65D8257}"
 EndProject
+Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "FreeRTOS_Leds_Example", "FreeRTOS_Leds_Example\FreeRTOS_Leds_Example.cproj", "{3C300D63-BCC2-4627-BDE4-1A95E2E99612}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|AVR = Debug|AVR
@@ -84,6 +86,10 @@ Global
 		{CAD91A24-A324-4D99-9308-C74BE65D8257}.Debug|AVR.Build.0 = Debug|AVR
 		{CAD91A24-A324-4D99-9308-C74BE65D8257}.Release|AVR.ActiveCfg = Release|AVR
 		{CAD91A24-A324-4D99-9308-C74BE65D8257}.Release|AVR.Build.0 = Release|AVR
+		{3C300D63-BCC2-4627-BDE4-1A95E2E99612}.Debug|AVR.ActiveCfg = Debug|AVR
+		{3C300D63-BCC2-4627-BDE4-1A95E2E99612}.Debug|AVR.Build.0 = Debug|AVR
+		{3C300D63-BCC2-4627-BDE4-1A95E2E99612}.Release|AVR.ActiveCfg = Release|AVR
+		{3C300D63-BCC2-4627-BDE4-1A95E2E99612}.Release|AVR.Build.0 = Release|AVR
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
