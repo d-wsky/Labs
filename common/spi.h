@@ -3,6 +3,9 @@
  *
  * Created: 16-Jul-15 23:17:37
  *  Author: Denis Vasilkovsky
+ *
+ *   About: Простой драйвер для модуля SPI. Позволяет произвести инициализацию
+ *          модуля и передать данные в блокирующем (синхронном) виде.
  */
 
 #ifndef SPI_H_
@@ -10,12 +13,14 @@
 
 #include <avr/io.h>
 
+// Порт, к которому подключены ножки SPI
+#define SPI_PORT          GPIO_PORTB
 // Вывод ножки MOSI
-#define SPI_MOSI_PIN      PB2
+#define SPI_MOSI_PIN      GPIO_PIN2
 // Вывод ножки MISO
-#define SPI_SCK_PIN       PB1
+#define SPI_SCK_PIN       GPIO_PIN1
 // Вывод ножки SS
-#define SPI_SS_PIN        PB0
+#define SPI_SS_PIN        GPIO_PIN0
 
 /*! \brief Тип данных, используемый для выбора режима ведущий-ведомый.*/
 typedef enum {
