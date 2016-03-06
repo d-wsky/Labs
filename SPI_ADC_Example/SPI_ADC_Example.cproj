@@ -115,11 +115,6 @@
   <avrgcc.common.outputfiles.usersignatures>False</avrgcc.common.outputfiles.usersignatures>
   <avrgcc.compiler.general.ChangeDefaultCharTypeUnsigned>True</avrgcc.compiler.general.ChangeDefaultCharTypeUnsigned>
   <avrgcc.compiler.general.ChangeDefaultBitFieldUnsigned>True</avrgcc.compiler.general.ChangeDefaultBitFieldUnsigned>
-  <avrgcc.compiler.symbols.DefSymbols>
-    <ListValues>
-      <Value>__ASSERT_USE_STDERR</Value>
-    </ListValues>
-  </avrgcc.compiler.symbols.DefSymbols>
   <avrgcc.compiler.directories.IncludePaths>
     <ListValues>
       <Value>../../common</Value>
@@ -140,10 +135,6 @@
     </ToolchainSettings>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="..\Common\gpio.h">
-      <SubType>compile</SubType>
-      <Link>gpio.h</Link>
-    </Compile>
     <Compile Include="F:\My Portable Documents\Programing\AVRStudio Projects\Labs\common\spi.c">
       <SubType>compile</SubType>
       <Link>spi.c</Link>
