@@ -1,5 +1,7 @@
-Microsoft Visual Studio Solution File, Format Version 11.00
+Microsoft Visual Studio Solution File, Format Version 12.00
 # Atmel Studio Solution File, Format Version 11.00
+VisualStudioVersion = 14.0.23107.0
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "LCD_4bit_WriteOnly", "LCD_4bit_WriteOnly\LCD_4bit_WriteOnly.cproj", "{B9C42E9D-509B-4C10-8A69-BAF6A0BA1CFE}"
 EndProject
 Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "Timers_Program_delay", "Timers_Program_delay\Timers_Program_delay.cproj", "{DB837C6C-08D3-48DD-9054-ED229ABE0F29}"
@@ -27,6 +29,10 @@ EndProject
 Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "SPI_DAC_Example", "SPI_DAC_Example\SPI_DAC_Example.cproj", "{CAD91A24-A324-4D99-9308-C74BE65D8257}"
 EndProject
 Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "FreeRTOS_Leds_Example", "FreeRTOS_Leds_Example\FreeRTOS_Leds_Example.cproj", "{3C300D63-BCC2-4627-BDE4-1A95E2E99612}"
+EndProject
+Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "LabLib", "LabLib\LabLib.cproj", "{DCE6C7E3-EE26-4D79-826B-08594B9AD897}"
+EndProject
+Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "Gpio_Example", "Gpio_Example\Gpio_Example.cproj", "{E69EE0F6-7231-42C2-8EF1-A282462E04AC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -90,6 +96,14 @@ Global
 		{3C300D63-BCC2-4627-BDE4-1A95E2E99612}.Debug|AVR.Build.0 = Debug|AVR
 		{3C300D63-BCC2-4627-BDE4-1A95E2E99612}.Release|AVR.ActiveCfg = Release|AVR
 		{3C300D63-BCC2-4627-BDE4-1A95E2E99612}.Release|AVR.Build.0 = Release|AVR
+		{DCE6C7E3-EE26-4D79-826B-08594B9AD897}.Debug|AVR.ActiveCfg = Debug|AVR
+		{DCE6C7E3-EE26-4D79-826B-08594B9AD897}.Debug|AVR.Build.0 = Debug|AVR
+		{DCE6C7E3-EE26-4D79-826B-08594B9AD897}.Release|AVR.ActiveCfg = Release|AVR
+		{DCE6C7E3-EE26-4D79-826B-08594B9AD897}.Release|AVR.Build.0 = Release|AVR
+		{E69EE0F6-7231-42C2-8EF1-A282462E04AC}.Debug|AVR.ActiveCfg = Debug|AVR
+		{E69EE0F6-7231-42C2-8EF1-A282462E04AC}.Debug|AVR.Build.0 = Debug|AVR
+		{E69EE0F6-7231-42C2-8EF1-A282462E04AC}.Release|AVR.ActiveCfg = Release|AVR
+		{E69EE0F6-7231-42C2-8EF1-A282462E04AC}.Release|AVR.Build.0 = Release|AVR
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
