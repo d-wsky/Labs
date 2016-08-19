@@ -36,6 +36,7 @@
  */ 
 
 #include "structure.h"
+#include <avr/interrupt.h>
 
 void setup() __attribute__ ((weak));
 void loop() __attribute__((weak));
@@ -51,6 +52,8 @@ void loop() {
 int main(void)
 {
     setup();
+
+	sei();
     
     while (1) {
         loop();
