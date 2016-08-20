@@ -32,6 +32,8 @@ Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "LabLib", "LabLib\LabLib.cpr
 EndProject
 Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "Gpio_Example", "Gpio_Example\Gpio_Example.cproj", "{E69EE0F6-7231-42C2-8EF1-A282462E04AC}"
 EndProject
+Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "FSM_Example", "FSM_Example\FSM_Example.cproj", "{04C58EE1-A2F1-404A-9DCA-ADFEC474F377}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|AVR = Debug|AVR
@@ -98,6 +100,10 @@ Global
 		{E69EE0F6-7231-42C2-8EF1-A282462E04AC}.Debug|AVR.Build.0 = Debug|AVR
 		{E69EE0F6-7231-42C2-8EF1-A282462E04AC}.Release|AVR.ActiveCfg = Release|AVR
 		{E69EE0F6-7231-42C2-8EF1-A282462E04AC}.Release|AVR.Build.0 = Release|AVR
+		{04C58EE1-A2F1-404A-9DCA-ADFEC474F377}.Debug|AVR.ActiveCfg = Debug|AVR
+		{04C58EE1-A2F1-404A-9DCA-ADFEC474F377}.Debug|AVR.Build.0 = Debug|AVR
+		{04C58EE1-A2F1-404A-9DCA-ADFEC474F377}.Release|AVR.ActiveCfg = Release|AVR
+		{04C58EE1-A2F1-404A-9DCA-ADFEC474F377}.Release|AVR.Build.0 = Release|AVR
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
