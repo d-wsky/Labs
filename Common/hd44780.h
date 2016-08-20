@@ -1,13 +1,13 @@
-/*
+п»ї/*
  * hd44780.h
  *
  * Created: 11-Aug-15 23:38:56
- *  Author: Денис Васильковский
+ *  Author: Р”РµРЅРёСЃ Р’Р°СЃРёР»СЊРєРѕРІСЃРєРёР№
  *
- *   About: Интерфейсный файл для библиотеки ЖКИ контроллера HD44780 и
- *          совместимого с ним OLED контроллера Winstar.
+ *   About: РРЅС‚РµСЂС„РµР№СЃРЅС‹Р№ С„Р°Р№Р» РґР»СЏ Р±РёР±Р»РёРѕС‚РµРєРё Р–РљР РєРѕРЅС‚СЂРѕР»Р»РµСЂР° HD44780 Рё
+ *          СЃРѕРІРјРµСЃС‚РёРјРѕРіРѕ СЃ РЅРёРј OLED РєРѕРЅС‚СЂРѕР»Р»РµСЂР° Winstar.
  *
- *    Todo: Не поддерживается режим чтения данных из дисплея.
+ *    Todo: РќРµ РїРѕРґРґРµСЂР¶РёРІР°РµС‚СЃСЏ СЂРµР¶РёРј С‡С‚РµРЅРёСЏ РґР°РЅРЅС‹С… РёР· РґРёСЃРїР»РµСЏ.
  */ 
 
 
@@ -16,7 +16,7 @@
 
 #include <avr/io.h>
 
-/* эти параметры зависят от аппаратной конфигурации */
+/* СЌС‚Рё РїР°СЂР°РјРµС‚СЂС‹ Р·Р°РІРёСЃСЏС‚ РѕС‚ Р°РїРїР°СЂР°С‚РЅРѕР№ РєРѕРЅС„РёРіСѓСЂР°С†РёРё */
 #define HD44780_RS_PIN              PC0
 #define HD44780_RS_PORT             PORTC
 #define HD44780_RW_PIN              PC2
@@ -27,27 +27,27 @@
 #define HD44780_DATA_PIN            PC4
 #define HD44780_DATA_WIDTH          4
 
-/* установка лог. "1" на линии E */
+/* СѓСЃС‚Р°РЅРѕРІРєР° Р»РѕРі. "1" РЅР° Р»РёРЅРёРё E */
 #define HD44780_E_SET             ( HD44780_E_PORT  |= (1 << HD44780_E_PIN) )
-/* установка лог. "0" на линии E */
+/* СѓСЃС‚Р°РЅРѕРІРєР° Р»РѕРі. "0" РЅР° Р»РёРЅРёРё E */
 #define HD44780_E_CLR             ( HD44780_E_PORT  &=~(1 << HD44780_E_PIN) )
-/* установка лог. "1" на линии RS */
+/* СѓСЃС‚Р°РЅРѕРІРєР° Р»РѕРі. "1" РЅР° Р»РёРЅРёРё RS */
 #define HD44780_RS_SET            ( HD44780_RS_PORT |= (1 << HD44780_RS_PIN) )
-/* установка лог. "0" на линии RS */
+/* СѓСЃС‚Р°РЅРѕРІРєР° Р»РѕРі. "0" РЅР° Р»РёРЅРёРё RS */
 #define HD44780_RS_CLR            ( HD44780_RS_PORT &=~(1 << HD44780_RS_PIN) )
-/* задержка на передачу данных в контроллер ЖКИ */
+/* Р·Р°РґРµСЂР¶РєР° РЅР° РїРµСЂРµРґР°С‡Сѓ РґР°РЅРЅС‹С… РІ РєРѕРЅС‚СЂРѕР»Р»РµСЂ Р–РљР */
 #define HD44780_PUTNIBBLE_DELAY     _delay_us(50)
 
-/* макрос, указывающий функции, что
-передаются команды */
+/* РјР°РєСЂРѕСЃ, СѓРєР°Р·С‹РІР°СЋС‰РёР№ С„СѓРЅРєС†РёРё, С‡С‚Рѕ
+РїРµСЂРµРґР°СЋС‚СЃСЏ РєРѕРјР°РЅРґС‹ */
 #define HD44780_COMMAND             0
-/* макрос, указывающий функции, что
-передаются данные */
+/* РјР°РєСЂРѕСЃ, СѓРєР°Р·С‹РІР°СЋС‰РёР№ С„СѓРЅРєС†РёРё, С‡С‚Рѕ
+РїРµСЂРµРґР°СЋС‚СЃСЏ РґР°РЅРЅС‹Рµ */
 #define HD44780_DATA                1
 
-/* типы данных, используемые для инициализации дисплея */
+/* С‚РёРїС‹ РґР°РЅРЅС‹С…, РёСЃРїРѕР»СЊР·СѓРµРјС‹Рµ РґР»СЏ РёРЅРёС†РёР°Р»РёР·Р°С†РёРё РґРёСЃРїР»РµСЏ */
 
-/* физические параметры дисплея */
+/* С„РёР·РёС‡РµСЃРєРёРµ РїР°СЂР°РјРµС‚СЂС‹ РґРёСЃРїР»РµСЏ */
 #define HD44780_PHYSICAL_CMD        (1 << 5)
 #define HD44780_5x8MATRIX           (0 << 2)
 #define HD44780_5x10MATRIX          (1 << 2)
@@ -55,7 +55,7 @@
 #define HD44780_2ROW                (1 << 3)
 #define HD44780_4BIT_BUS            (0 << 4)
 #define HD44780_8BIT_BUS            (1 << 4)
-/* поддержка русской кодовой страницы WS0001 */
+/* РїРѕРґРґРµСЂР¶РєР° СЂСѓСЃСЃРєРѕР№ РєРѕРґРѕРІРѕР№ СЃС‚СЂР°РЅРёС†С‹ WS0001 */
 #define HD44780_RUS_FONT_TABLE      (2 << 0)
 #if (HD44780_DATA_WIDTH == 4)
 #define HD44780_BUS_WIDTH   HD44780_4BIT_BUS
@@ -66,22 +66,22 @@
 #endif
 
 typedef enum {
-    Phys1Row5x8  = HD44780_PHYSICAL_CMD | HD44780_BUS_WIDTH | HD44780_1ROW | HD44780_5x8MATRIX  | HD44780_RUS_FONT_TABLE,
-    Phys1Row5x10 = HD44780_PHYSICAL_CMD | HD44780_BUS_WIDTH | HD44780_1ROW | HD44780_5x10MATRIX | HD44780_RUS_FONT_TABLE,
-    Phys2Row5x8  = HD44780_PHYSICAL_CMD | HD44780_BUS_WIDTH | HD44780_2ROW | HD44780_5x8MATRIX  | HD44780_RUS_FONT_TABLE,
-    Phys2Row5x10 = HD44780_PHYSICAL_CMD | HD44780_BUS_WIDTH | HD44780_2ROW | HD44780_5x10MATRIX | HD44780_RUS_FONT_TABLE,
+	Phys1Row5x8  = HD44780_PHYSICAL_CMD | HD44780_BUS_WIDTH | HD44780_1ROW | HD44780_5x8MATRIX  | HD44780_RUS_FONT_TABLE,
+	Phys1Row5x10 = HD44780_PHYSICAL_CMD | HD44780_BUS_WIDTH | HD44780_1ROW | HD44780_5x10MATRIX | HD44780_RUS_FONT_TABLE,
+	Phys2Row5x8  = HD44780_PHYSICAL_CMD | HD44780_BUS_WIDTH | HD44780_2ROW | HD44780_5x8MATRIX  | HD44780_RUS_FONT_TABLE,
+	Phys2Row5x10 = HD44780_PHYSICAL_CMD | HD44780_BUS_WIDTH | HD44780_2ROW | HD44780_5x10MATRIX | HD44780_RUS_FONT_TABLE,
 } Hd44780PhysicalParams_t;
 
-/* направление вывода */
+/* РЅР°РїСЂР°РІР»РµРЅРёРµ РІС‹РІРѕРґР° */
 #define HD44780_OUT_CMD             (1 << 2)
 #define HD44780_OUT_LEFT_TO_RIGHT   (1 << 1)
 #define HD44780_OUT_RIGHT_TO_LEFT   (0 << 1)
 typedef enum {
-    OutNorm   = HD44780_OUT_CMD | HD44780_OUT_LEFT_TO_RIGHT,
-    OutArabic = HD44780_OUT_CMD | HD44780_OUT_RIGHT_TO_LEFT
+	OutNorm   = HD44780_OUT_CMD | HD44780_OUT_LEFT_TO_RIGHT,
+	OutArabic = HD44780_OUT_CMD | HD44780_OUT_RIGHT_TO_LEFT
 } Hd44780OutParams_t;
 
-/* варианты отображения курсора */
+/* РІР°СЂРёР°РЅС‚С‹ РѕС‚РѕР±СЂР°Р¶РµРЅРёСЏ РєСѓСЂСЃРѕСЂР° */
 #define HD44780_CURSOR_MODE_CMD     (1 << 3)
 #define HD44780_DISPLAY_ON          (1 << 2)
 #define HD44780_DISPLAY_OFF         (0 << 2)
@@ -91,48 +91,48 @@ typedef enum {
 #define HD44780_BLINK_OFF           (0 << 0)
 
 typedef enum {
-    DispOff          = HD44780_CURSOR_MODE_CMD | HD44780_DISPLAY_OFF,
-    CursorOff        = HD44780_CURSOR_MODE_CMD | HD44780_DISPLAY_ON | HD44780_CURSOR_OFF | HD44780_BLINK_OFF,
-    CursorMode1      = HD44780_CURSOR_MODE_CMD | HD44780_DISPLAY_ON | HD44780_CURSOR_ON  | HD44780_BLINK_OFF,
-    CursorMode1Blink = HD44780_CURSOR_MODE_CMD | HD44780_DISPLAY_ON | HD44780_CURSOR_ON  | HD44780_BLINK_ON,
-    CursorMode2      = HD44780_CURSOR_MODE_CMD | HD44780_DISPLAY_ON | HD44780_CURSOR_OFF | HD44780_BLINK_OFF,
-    CursorMode2Blink = HD44780_CURSOR_MODE_CMD | HD44780_DISPLAY_ON | HD44780_CURSOR_OFF | HD44780_BLINK_ON
+	DispOff          = HD44780_CURSOR_MODE_CMD | HD44780_DISPLAY_OFF,
+	CursorOff        = HD44780_CURSOR_MODE_CMD | HD44780_DISPLAY_ON | HD44780_CURSOR_OFF | HD44780_BLINK_OFF,
+	CursorMode1      = HD44780_CURSOR_MODE_CMD | HD44780_DISPLAY_ON | HD44780_CURSOR_ON  | HD44780_BLINK_OFF,
+	CursorMode1Blink = HD44780_CURSOR_MODE_CMD | HD44780_DISPLAY_ON | HD44780_CURSOR_ON  | HD44780_BLINK_ON,
+	CursorMode2      = HD44780_CURSOR_MODE_CMD | HD44780_DISPLAY_ON | HD44780_CURSOR_OFF | HD44780_BLINK_OFF,
+	CursorMode2Blink = HD44780_CURSOR_MODE_CMD | HD44780_DISPLAY_ON | HD44780_CURSOR_OFF | HD44780_BLINK_ON
 } Hd44780CursorMode_t;
 
 #define HD44780_GOTO_CMD            (1 << 7)
 
-/* функция передачи байта в жки. 
-char c - сам байт
-char rs - переменная, указывающая что передается:
-     rs = 0 - команда (устанавливается линия RS)
-     rs = 1 - данные (сбрасывается линия RS) */
+/* С„СѓРЅРєС†РёСЏ РїРµСЂРµРґР°С‡Рё Р±Р°Р№С‚Р° РІ Р¶РєРё. 
+char c - СЃР°Рј Р±Р°Р№С‚
+char rs - РїРµСЂРµРјРµРЅРЅР°СЏ, СѓРєР°Р·С‹РІР°СЋС‰Р°СЏ С‡С‚Рѕ РїРµСЂРµРґР°РµС‚СЃСЏ:
+     rs = 0 - РєРѕРјР°РЅРґР° (СѓСЃС‚Р°РЅР°РІР»РёРІР°РµС‚СЃСЏ Р»РёРЅРёСЏ RS)
+	 rs = 1 - РґР°РЅРЅС‹Рµ (СЃР±СЂР°СЃС‹РІР°РµС‚СЃСЏ Р»РёРЅРёСЏ RS) */
 void hd44780_putbyte(char c, char rs);
 
-/* функция очистки дисплея и возврата
-курсора в начальную позицию*/
+/* С„СѓРЅРєС†РёСЏ РѕС‡РёСЃС‚РєРё РґРёСЃРїР»РµСЏ Рё РІРѕР·РІСЂР°С‚Р°
+РєСѓСЂСЃРѕСЂР° РІ РЅР°С‡Р°Р»СЊРЅСѓСЋ РїРѕР·РёС†РёСЋ*/
 void hd44780_clear();
 
-/* функция перемещения курсора в заданную позицию
-col - номер знакоместа по горизонтальной оси (от 0 до 15)
-row - номер строки (0 или 1) */
+/* С„СѓРЅРєС†РёСЏ РїРµСЂРµРјРµС‰РµРЅРёСЏ РєСѓСЂСЃРѕСЂР° РІ Р·Р°РґР°РЅРЅСѓСЋ РїРѕР·РёС†РёСЋ
+col - РЅРѕРјРµСЂ Р·РЅР°РєРѕРјРµСЃС‚Р° РїРѕ РіРѕСЂРёР·РѕРЅС‚Р°Р»СЊРЅРѕР№ РѕСЃРё (РѕС‚ 0 РґРѕ 15)
+row - РЅРѕРјРµСЂ СЃС‚СЂРѕРєРё (0 РёР»Рё 1) */
 void hd44780_gotoxy(char col, char row);
 
-/* функция перемещения курсора в начальную
-позицию (0, 0) */
+/* С„СѓРЅРєС†РёСЏ РїРµСЂРµРјРµС‰РµРЅРёСЏ РєСѓСЂСЃРѕСЂР° РІ РЅР°С‡Р°Р»СЊРЅСѓСЋ
+РїРѕР·РёС†РёСЋ (0, 0) */
 void hd44780_home();
 
-/* функция инициализации работы жки
-в 4-битном режиме, без курсора */
+/* С„СѓРЅРєС†РёСЏ РёРЅРёС†РёР°Р»РёР·Р°С†РёРё СЂР°Р±РѕС‚С‹ Р¶РєРё
+РІ 4-Р±РёС‚РЅРѕРј СЂРµР¶РёРјРµ, Р±РµР· РєСѓСЂСЃРѕСЂР° */
 void hd44780_init(Hd44780PhysicalParams_t ph,
                   Hd44780OutParams_t out,
                   Hd44780CursorMode_t cur);
-              
-/* функция вывода отдельного байта на текущей позиции */
+			  
+/* С„СѓРЅРєС†РёСЏ РІС‹РІРѕРґР° РѕС‚РґРµР»СЊРЅРѕРіРѕ Р±Р°Р№С‚Р° РЅР° С‚РµРєСѓС‰РµР№ РїРѕР·РёС†РёРё */
 static inline void hd44780_putc(char x) {
-    hd44780_putbyte(x, HD44780_DATA);
+	hd44780_putbyte(x, HD44780_DATA);
 }
 
-/* функция вывода стандартной строки на текущей позиции */
+/* С„СѓРЅРєС†РёСЏ РІС‹РІРѕРґР° СЃС‚Р°РЅРґР°СЂС‚РЅРѕР№ СЃС‚СЂРѕРєРё РЅР° С‚РµРєСѓС‰РµР№ РїРѕР·РёС†РёРё */
 void hd44780_puts(char * str);
 
 #endif /* HD44780_H_ */

@@ -76,7 +76,7 @@ typedef uint8_t FsmState_t;
 событии, которое в данный момент обрабатывается конечным автоматом.
 \return true - означает переход конечного автомата в новое состояние.
         false - означает, что указанный переход не будет осуществлен, но
-                таблица будет проверяться далее.
+		        таблица будет проверяться далее.
 */
 typedef bool (*FsmGuard_t)(void * p_data);
 
@@ -85,10 +85,10 @@ typedef void (*FsmAction_t)(void * p_data);
 typedef uint8_t FsmEvent_t;
 
 typedef  struct {
-    FsmEvent_t event;
-    FsmGuard_t guard;
-    FsmAction_t action;
-    FsmState_t next_state;
+	FsmEvent_t event;
+	FsmGuard_t guard;
+	FsmAction_t action;
+	FsmState_t next_state;
 } FsmTableItem_t;
 
 typedef FsmTableItem_t FsmTable_t;
@@ -101,21 +101,21 @@ typedef FsmTableItem_t FsmTable_t;
 #define FSM_ANY_STATE    0xFF
 
 #define FSM_STATE(s)       \
-    { .event = FSM_NO_EVENT, .guard = NULL,  .action = NULL,   .next_state = (s) }
+	{ .event = FSM_NO_EVENT, .guard = NULL,  .action = NULL,   .next_state = (s) }
 
 #define FSM_TRANSITION(Event, Guard, Action, NextState)     \
-    { .event = Event,        .guard = Guard, .action = Action, .next_state = NextState }
+	{ .event = Event,        .guard = Guard, .action = Action, .next_state = NextState }
 
 typedef struct {
-    FsmState_t   current_state;
-    FsmTable_t * table;
-    uint8_t      table_size;
+	FsmState_t   current_state;
+	FsmTable_t * table;
+	uint8_t      table_size;
 } Fsm_t;
 
 void fsmInit(Fsm_t * fsm, FsmTable_t * table, uint8_t table_size, FsmState_t init_state);
 void fsmEventPost(FsmEvent_t event, Fsm_t * fsm, void * p_data);
 static inline FsmState_t fsmCurrentState(Fsm_t * fsm) {
-    return fsm->current_state;
+	return fsm->current_state;
 }
 
 #endif /* FSM_H */

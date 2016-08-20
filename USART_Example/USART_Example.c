@@ -1,14 +1,14 @@
-/*
+п»ї/*
  * USART_Example.c
  *
  * Created: 27.02.2012 17:23:46
  *  Author: Denis Vasilkovsky
  *
- *   About: Пример использования последовательного интерфейся для передачи
- *          данных между ПК и МК. Используя порт UART0 МК слушает эфир на
- *          стандартных 9600-8-N-1 и принимаемые символы отображает на ЖКИ.
- *          Он также отсылает полученные символы обратно, чтобы они могли
- *          отобразиться на терминале.
+ *   About: РџСЂРёРјРµСЂ РёСЃРїРѕР»СЊР·РѕРІР°РЅРёСЏ РїРѕСЃР»РµРґРѕРІР°С‚РµР»СЊРЅРѕРіРѕ РёРЅС‚РµСЂС„РµР№СЃСЏ РґР»СЏ РїРµСЂРµРґР°С‡Рё
+ *          РґР°РЅРЅС‹С… РјРµР¶РґСѓ РџРљ Рё РњРљ. РСЃРїРѕР»СЊР·СѓСЏ РїРѕСЂС‚ UART0 РњРљ СЃР»СѓС€Р°РµС‚ СЌС„РёСЂ РЅР°
+ *          СЃС‚Р°РЅРґР°СЂС‚РЅС‹С… 9600-8-N-1 Рё РїСЂРёРЅРёРјР°РµРјС‹Рµ СЃРёРјРІРѕР»С‹ РѕС‚РѕР±СЂР°Р¶Р°РµС‚ РЅР° Р–РљР.
+ *          РћРЅ С‚Р°РєР¶Рµ РѕС‚СЃС‹Р»Р°РµС‚ РїРѕР»СѓС‡РµРЅРЅС‹Рµ СЃРёРјРІРѕР»С‹ РѕР±СЂР°С‚РЅРѕ, С‡С‚РѕР±С‹ РѕРЅРё РјРѕРіР»Рё
+ *          РѕС‚РѕР±СЂР°Р·РёС‚СЊСЃСЏ РЅР° С‚РµСЂРјРёРЅР°Р»Рµ.
  */ 
 
 #include <avr/io.h>
@@ -18,29 +18,29 @@
 
 int main(void) {
 
-    unsigned char dat=0;
-    DDRC = 0xFF;
-    
-    usart0_init(UBRR_FROM_BAUD(UART0_BAUD));
-    /* Привязываем основной поток вывода к u0stdout */
-    stdout = &uart0_iostream;
-    stdin = &uart0_iostream;
-    /* Инициализация и очистка дисплея */
-    hd44780_init(Phys2Row5x8, OutNorm, CursorMode1Blink);
-    hd44780_clear();
-    
-    sei();
-    
-    /* Пример вывода текста с использованием функции printf */
-    printf("\033[2JSimple example of using USART-RS232 bridge.\r\n\r\n");
-    printf("All that you type appears on LCD.\r\n");
-    printf("USART echoes all typed symbols back so they appears here...\r\n\r\n");
-    
-    while(1) {
-        /* Проверяем приемный буфер */
-        dat = getchar();
-        /* Когда поступит новый символ, выводим его на ЖКИ и в USART */
-        hd44780_putc(dat);
-        putchar(dat);
-    };
+	unsigned char dat=0;
+	DDRC = 0xFF;
+	
+	usart0_init(UBRR_FROM_BAUD(UART0_BAUD));
+	/* РџСЂРёРІСЏР·С‹РІР°РµРј РѕСЃРЅРѕРІРЅРѕР№ РїРѕС‚РѕРє РІС‹РІРѕРґР° Рє u0stdout */
+	stdout = &uart0_iostream;
+	stdin = &uart0_iostream;
+	/* РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ Рё РѕС‡РёСЃС‚РєР° РґРёСЃРїР»РµСЏ */
+	hd44780_init(Phys2Row5x8, OutNorm, CursorMode1Blink);
+	hd44780_clear();
+	
+	sei();
+	
+	/* РџСЂРёРјРµСЂ РІС‹РІРѕРґР° С‚РµРєСЃС‚Р° СЃ РёСЃРїРѕР»СЊР·РѕРІР°РЅРёРµРј С„СѓРЅРєС†РёРё printf */
+	printf("\033[2JSimple example of using USART-RS232 bridge.\r\n\r\n");
+	printf("All that you type appears on LCD.\r\n");
+	printf("USART echoes all typed symbols back so they appears here...\r\n\r\n");
+	
+	while(1) {
+    	/* РџСЂРѕРІРµСЂСЏРµРј РїСЂРёРµРјРЅС‹Р№ Р±СѓС„РµСЂ */
+		dat = getchar();
+		/* РљРѕРіРґР° РїРѕСЃС‚СѓРїРёС‚ РЅРѕРІС‹Р№ СЃРёРјРІРѕР», РІС‹РІРѕРґРёРј РµРіРѕ РЅР° Р–РљР Рё РІ USART */
+		hd44780_putc(dat);
+		putchar(dat);
+	};
 }

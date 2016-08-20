@@ -1,191 +1,191 @@
-/*
+п»ї/*
  * i2c.c
  *
  * Created: 12-Aug-15 22:52:36
- *  Author: Денис Васильковский
+ *  Author: Р”РµРЅРёСЃ Р’Р°СЃРёР»СЊРєРѕРІСЃРєРёР№
  */ 
 
 #include "i2c.h"
 #include <avr/io.h>
 
-/*! \brief Макрос описывает состояние TWSR после успешного
-перехода шины I2C в состояние \a START.*/
-#define     I2C_START                    0x08
-/*! \brief Макрос описывает состояние TWSR после успешного
-перехода шины I2C в состояние повторного \a START.*/
-#define     I2C_REPEAT_START            0x10
-/*! \brief Макрос описывает состояние TWSR после успешного
-приема ведомым байта адреса на запись по шине I2C.*/
-#define  I2C_MAS_TX_SLA_ACK            0x18
-/*! \brief Макрос описывает состояние TWSR после успешного
-приема ведомым байта адреса на чтение по шине I2C.*/
-#define  I2C_MAS_RX_SLA_ACK            0x40
-/*! \brief Макрос описывает состояние TWSR после успешной
-передачи байта данных на запись по шине I2C.*/
-#define  I2C_MAS_TX_DATA_ACK        0x28
-/*! \brief Макрос описывает состояние TWSR после успешного
-приема байта данных по шине I2C с установкой \a ACK.*/
-#define  I2C_MAS_RX_DATA_ACK        0x50
-/*! \brief Макрос описывает состояние TWSR после успешного
-приема байта данных по шине I2C с установкой \a NACK.*/
-#define  I2C_MAS_RX_DATA_NACK        0x58
+/*! \brief РњР°РєСЂРѕСЃ РѕРїРёСЃС‹РІР°РµС‚ СЃРѕСЃС‚РѕСЏРЅРёРµ TWSR РїРѕСЃР»Рµ СѓСЃРїРµС€РЅРѕРіРѕ
+РїРµСЂРµС…РѕРґР° С€РёРЅС‹ I2C РІ СЃРѕСЃС‚РѕСЏРЅРёРµ \a START.*/
+#define	 I2C_START				    0x08
+/*! \brief РњР°РєСЂРѕСЃ РѕРїРёСЃС‹РІР°РµС‚ СЃРѕСЃС‚РѕСЏРЅРёРµ TWSR РїРѕСЃР»Рµ СѓСЃРїРµС€РЅРѕРіРѕ
+РїРµСЂРµС…РѕРґР° С€РёРЅС‹ I2C РІ СЃРѕСЃС‚РѕСЏРЅРёРµ РїРѕРІС‚РѕСЂРЅРѕРіРѕ \a START.*/
+#define	 I2C_REPEAT_START			0x10
+/*! \brief РњР°РєСЂРѕСЃ РѕРїРёСЃС‹РІР°РµС‚ СЃРѕСЃС‚РѕСЏРЅРёРµ TWSR РїРѕСЃР»Рµ СѓСЃРїРµС€РЅРѕРіРѕ
+РїСЂРёРµРјР° РІРµРґРѕРјС‹Рј Р±Р°Р№С‚Р° Р°РґСЂРµСЃР° РЅР° Р·Р°РїРёСЃСЊ РїРѕ С€РёРЅРµ I2C.*/
+#define  I2C_MAS_TX_SLA_ACK			0x18
+/*! \brief РњР°РєСЂРѕСЃ РѕРїРёСЃС‹РІР°РµС‚ СЃРѕСЃС‚РѕСЏРЅРёРµ TWSR РїРѕСЃР»Рµ СѓСЃРїРµС€РЅРѕРіРѕ
+РїСЂРёРµРјР° РІРµРґРѕРјС‹Рј Р±Р°Р№С‚Р° Р°РґСЂРµСЃР° РЅР° С‡С‚РµРЅРёРµ РїРѕ С€РёРЅРµ I2C.*/
+#define  I2C_MAS_RX_SLA_ACK			0x40
+/*! \brief РњР°РєСЂРѕСЃ РѕРїРёСЃС‹РІР°РµС‚ СЃРѕСЃС‚РѕСЏРЅРёРµ TWSR РїРѕСЃР»Рµ СѓСЃРїРµС€РЅРѕР№
+РїРµСЂРµРґР°С‡Рё Р±Р°Р№С‚Р° РґР°РЅРЅС‹С… РЅР° Р·Р°РїРёСЃСЊ РїРѕ С€РёРЅРµ I2C.*/
+#define  I2C_MAS_TX_DATA_ACK		0x28
+/*! \brief РњР°РєСЂРѕСЃ РѕРїРёСЃС‹РІР°РµС‚ СЃРѕСЃС‚РѕСЏРЅРёРµ TWSR РїРѕСЃР»Рµ СѓСЃРїРµС€РЅРѕРіРѕ
+РїСЂРёРµРјР° Р±Р°Р№С‚Р° РґР°РЅРЅС‹С… РїРѕ С€РёРЅРµ I2C СЃ СѓСЃС‚Р°РЅРѕРІРєРѕР№ \a ACK.*/
+#define  I2C_MAS_RX_DATA_ACK		0x50
+/*! \brief РњР°РєСЂРѕСЃ РѕРїРёСЃС‹РІР°РµС‚ СЃРѕСЃС‚РѕСЏРЅРёРµ TWSR РїРѕСЃР»Рµ СѓСЃРїРµС€РЅРѕРіРѕ
+РїСЂРёРµРјР° Р±Р°Р№С‚Р° РґР°РЅРЅС‹С… РїРѕ С€РёРЅРµ I2C СЃ СѓСЃС‚Р°РЅРѕРІРєРѕР№ \a NACK.*/
+#define  I2C_MAS_RX_DATA_NACK		0x58
 
-/* маска для определения значения статуса */
+/* РјР°СЃРєР° РґР»СЏ РѕРїСЂРµРґРµР»РµРЅРёСЏ Р·РЅР°С‡РµРЅРёСЏ СЃС‚Р°С‚СѓСЃР° */
 #define STATUS_MASK            0xF8
-/* текущее значение статуса модуля i2c */
+/* С‚РµРєСѓС‰РµРµ Р·РЅР°С‡РµРЅРёРµ СЃС‚Р°С‚СѓСЃР° РјРѕРґСѓР»СЏ i2c */
 #define STATUS_IS(x)         ((TWSR & STATUS_MASK) == x)
-/* возвращает истину, если входной параметр является адресом на чтение */
+/* РІРѕР·РІСЂР°С‰Р°РµС‚ РёСЃС‚РёРЅСѓ, РµСЃР»Рё РІС…РѕРґРЅРѕР№ РїР°СЂР°РјРµС‚СЂ СЏРІР»СЏРµС‚СЃСЏ Р°РґСЂРµСЃРѕРј РЅР° С‡С‚РµРЅРёРµ */
 #define IS_READ_ADDRESS(x)    (x & 1)
 
-/* Инициализация внутреннего приемопередатчика I2C.*/
+/* РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ РІРЅСѓС‚СЂРµРЅРЅРµРіРѕ РїСЂРёРµРјРѕРїРµСЂРµРґР°С‚С‡РёРєР° I2C.*/
 void i2c_init(unsigned long freq) {
-    TWBR  = TWBR_FROM_HZ(freq);
-    TWSR &=~((1 << TWPS1) | (1 << TWPS0));
+	TWBR  = TWBR_FROM_HZ(freq);
+	TWSR &=~((1 << TWPS1) | (1 << TWPS0));
 
-    // включение модуля
-    TWCR |= (1 << TWEN);
+	// РІРєР»СЋС‡РµРЅРёРµ РјРѕРґСѓР»СЏ
+	TWCR |= (1 << TWEN);
 }
 
-/* Отключение приемопередатчика шины I2C.*/
+/* РћС‚РєР»СЋС‡РµРЅРёРµ РїСЂРёРµРјРѕРїРµСЂРµРґР°С‚С‡РёРєР° С€РёРЅС‹ I2C.*/
 void i2c_close() {
-    TWCR &= ~(1 << TWEN);
+	TWCR &= ~(1 << TWEN);
 }
 
-/* Установка состояния \a START на шине I2C.*/
+/* РЈСЃС‚Р°РЅРѕРІРєР° СЃРѕСЃС‚РѕСЏРЅРёСЏ \a START РЅР° С€РёРЅРµ I2C.*/
 i2c_status_t i2c_start() {
-    // Установка ссостояния старт
-    TWCR = (1 << TWINT) | (1 << TWEN) | (1 << TWSTA);
+	// РЈСЃС‚Р°РЅРѕРІРєР° СЃСЃРѕСЃС‚РѕСЏРЅРёСЏ СЃС‚Р°СЂС‚
+	TWCR = (1 << TWINT) | (1 << TWEN) | (1 << TWSTA);
 
-    // Ожидание изменения состояния
-    while (!(TWCR & (1 << TWINT)));
+	// РћР¶РёРґР°РЅРёРµ РёР·РјРµРЅРµРЅРёСЏ СЃРѕСЃС‚РѕСЏРЅРёСЏ
+	while (!(TWCR & (1 << TWINT)));
 
-    // Проверка правильности состояния шины
-    if (STATUS_IS(I2C_START))
-        return I2C_STATUS_OK;
-    else
-        return I2C_STATUS_ERROR;
+	// РџСЂРѕРІРµСЂРєР° РїСЂР°РІРёР»СЊРЅРѕСЃС‚Рё СЃРѕСЃС‚РѕСЏРЅРёСЏ С€РёРЅС‹
+	if (STATUS_IS(I2C_START))
+		return I2C_STATUS_OK;
+	else
+		return I2C_STATUS_ERROR;
 }
 
-/* Установка состояния \a REPEAT \a START на шине I2C.*/
+/* РЈСЃС‚Р°РЅРѕРІРєР° СЃРѕСЃС‚РѕСЏРЅРёСЏ \a REPEAT \a START РЅР° С€РёРЅРµ I2C.*/
 i2c_status_t i2c_repeat_start(void) {
-    // Отправка состояния старт
-    TWCR = (1 << TWINT) | (1 << TWEN) | (1 << TWSTA);
-    
-    // Ожидание изменения состояния
-    while (!(TWCR & (1 << TWINT)));
-    
-    if (STATUS_IS(I2C_REPEAT_START))
-        return I2C_STATUS_OK;
-    else
-        return I2C_STATUS_ERROR;
+	// РћС‚РїСЂР°РІРєР° СЃРѕСЃС‚РѕСЏРЅРёСЏ СЃС‚Р°СЂС‚
+	TWCR = (1 << TWINT) | (1 << TWEN) | (1 << TWSTA);
+	
+	// РћР¶РёРґР°РЅРёРµ РёР·РјРµРЅРµРЅРёСЏ СЃРѕСЃС‚РѕСЏРЅРёСЏ
+	while (!(TWCR & (1 << TWINT)));
+	
+	if (STATUS_IS(I2C_REPEAT_START))
+		return I2C_STATUS_OK;
+	else
+		return I2C_STATUS_ERROR;
 }
 
-/* Установка состояния \a STOP на шине I2C.*/
+/* РЈСЃС‚Р°РЅРѕРІРєР° СЃРѕСЃС‚РѕСЏРЅРёСЏ \a STOP РЅР° С€РёРЅРµ I2C.*/
 i2c_status_t i2c_stop() {
-    // передача состояния СТОП
-    TWCR = (1 << TWINT) | (1 << TWEN) | (1 << TWSTO);
+	// РїРµСЂРµРґР°С‡Р° СЃРѕСЃС‚РѕСЏРЅРёСЏ РЎРўРћРџ
+	TWCR = (1 << TWINT) | (1 << TWEN) | (1 << TWSTO);
 
-    // Ожидание изменения состояния
-    while (!(TWCR & (1 << TWSTO)));
-    
-    return I2C_STATUS_OK;
+	// РћР¶РёРґР°РЅРёРµ РёР·РјРµРЅРµРЅРёСЏ СЃРѕСЃС‚РѕСЏРЅРёСЏ
+	while (!(TWCR & (1 << TWSTO)));
+	
+	return I2C_STATUS_OK;
 }
 
-/* Передача адреса и команды чтения/записи по шине I2C.*/
+/* РџРµСЂРµРґР°С‡Р° Р°РґСЂРµСЃР° Рё РєРѕРјР°РЅРґС‹ С‡С‚РµРЅРёСЏ/Р·Р°РїРёСЃРё РїРѕ С€РёРЅРµ I2C.*/
 i2c_status_t i2c_write_addr(unsigned char addr) {
-    unsigned char expected_status;
-    
-    if (IS_READ_ADDRESS(addr))
-        expected_status = I2C_MAS_RX_SLA_ACK;
-    else
-        expected_status = I2C_MAS_TX_SLA_ACK;
-    
-    // установка адреса и начало передачи
-    TWDR = addr;
-    TWCR = (1 << TWINT) | (1 << TWEN);
+	unsigned char expected_status;
+	
+	if (IS_READ_ADDRESS(addr))
+		expected_status = I2C_MAS_RX_SLA_ACK;
+	else
+		expected_status = I2C_MAS_TX_SLA_ACK;
+	
+	// СѓСЃС‚Р°РЅРѕРІРєР° Р°РґСЂРµСЃР° Рё РЅР°С‡Р°Р»Рѕ РїРµСЂРµРґР°С‡Рё
+	TWDR = addr;
+	TWCR = (1 << TWINT) | (1 << TWEN);
 
-    // ожидание окончания передачи
-    while (!(TWCR & (1 << TWINT)));
-    
-    // проверка состояния
-    if (STATUS_IS(expected_status))
-        return I2C_STATUS_OK;
-    else
-        return I2C_STATUS_ERROR;
+	// РѕР¶РёРґР°РЅРёРµ РѕРєРѕРЅС‡Р°РЅРёСЏ РїРµСЂРµРґР°С‡Рё
+	while (!(TWCR & (1 << TWINT)));
+	
+	// РїСЂРѕРІРµСЂРєР° СЃРѕСЃС‚РѕСЏРЅРёСЏ
+	if (STATUS_IS(expected_status))
+		return I2C_STATUS_OK;
+	else
+		return I2C_STATUS_ERROR;
 }
 
-/* Передача байта данных по шине I2C в блокирующем режиме.*/
+/* РџРµСЂРµРґР°С‡Р° Р±Р°Р№С‚Р° РґР°РЅРЅС‹С… РїРѕ С€РёРЅРµ I2C РІ Р±Р»РѕРєРёСЂСѓСЋС‰РµРј СЂРµР¶РёРјРµ.*/
 i2c_status_t i2c_write_byte(unsigned char data) {
-    // Заполнение буфера
-    TWDR = data;    
+	// Р—Р°РїРѕР»РЅРµРЅРёРµ Р±СѓС„РµСЂР°
+	TWDR = data;	
 
-    // Включение передатчика
-    TWCR = (1 << TWEN) | (1 << TWINT);
+	// Р’РєР»СЋС‡РµРЅРёРµ РїРµСЂРµРґР°С‚С‡РёРєР°
+	TWCR = (1 << TWEN) | (1 << TWINT);
 
-    // Ожидание завершения передачи
-    while(!(TWCR & (1 << TWINT)));
+	// РћР¶РёРґР°РЅРёРµ Р·Р°РІРµСЂС€РµРЅРёСЏ РїРµСЂРµРґР°С‡Рё
+	while(!(TWCR & (1 << TWINT)));
 
-    if (STATUS_IS(I2C_MAS_TX_DATA_ACK))
-        return I2C_STATUS_OK;
-    else
-        return I2C_STATUS_ERROR;
+	if (STATUS_IS(I2C_MAS_TX_DATA_ACK))
+		return I2C_STATUS_OK;
+	else
+		return I2C_STATUS_ERROR;
 }
 
-/* Чтение байта данных с шины I2C с подтверждением и без.*/
+/* Р§С‚РµРЅРёРµ Р±Р°Р№С‚Р° РґР°РЅРЅС‹С… СЃ С€РёРЅС‹ I2C СЃ РїРѕРґС‚РІРµСЂР¶РґРµРЅРёРµРј Рё Р±РµР·.*/
 i2c_status_t i2c_read_byte(unsigned char* data, i2c_ack_t ack) {
-    char expected_status;
-    
-    //Set up ACK
-    if (ack == I2C_ACK) {
-        expected_status = I2C_MAS_RX_DATA_ACK;
-        // передача ACK приема байта
-        TWCR |= (1 << TWEA);
-    }
-    else {
-        expected_status = I2C_MAS_RX_DATA_NACK;
-        // передача NACK после приема байта
-        TWCR &= ~(1 << TWEA);
-    }
-    
-    // включением приема очисткой TWINT
-    TWCR |= (1 << TWINT);
+	char expected_status;
+	
+	//Set up ACK
+	if (ack == I2C_ACK) {
+		expected_status = I2C_MAS_RX_DATA_ACK;
+		// РїРµСЂРµРґР°С‡Р° ACK РїСЂРёРµРјР° Р±Р°Р№С‚Р°
+		TWCR |= (1 << TWEA);
+	}
+	else {
+		expected_status = I2C_MAS_RX_DATA_NACK;
+		// РїРµСЂРµРґР°С‡Р° NACK РїРѕСЃР»Рµ РїСЂРёРµРјР° Р±Р°Р№С‚Р°
+		TWCR &= ~(1 << TWEA);
+	}
+	
+	// РІРєР»СЋС‡РµРЅРёРµРј РїСЂРёРµРјР° РѕС‡РёСЃС‚РєРѕР№ TWINT
+	TWCR |= (1 << TWINT);
 
-    // ожидание завершения приема
-    while (!(TWCR & (1<<TWINT)));
+	// РѕР¶РёРґР°РЅРёРµ Р·Р°РІРµСЂС€РµРЅРёСЏ РїСЂРёРµРјР°
+	while (!(TWCR & (1<<TWINT)));
 
-    if (STATUS_IS(expected_status)) {
-        // полученные данные верны
-        *data = TWDR;
-        return I2C_STATUS_OK;
-    }
-    else {
-        return I2C_STATUS_ERROR;
-    }
+	if (STATUS_IS(expected_status)) {
+		// РїРѕР»СѓС‡РµРЅРЅС‹Рµ РґР°РЅРЅС‹Рµ РІРµСЂРЅС‹
+		*data = TWDR;
+		return I2C_STATUS_OK;
+	}
+	else {
+		return I2C_STATUS_ERROR;
+	}
 }
 
-/* Функция чтения нескольких байт подряд.*/
+/* Р¤СѓРЅРєС†РёСЏ С‡С‚РµРЅРёСЏ РЅРµСЃРєРѕР»СЊРєРёС… Р±Р°Р№С‚ РїРѕРґСЂСЏРґ.*/
 size_t i2c_read_multiple(unsigned char* data, const size_t len) {
-    size_t rx_count = 0;
-    for (size_t i = 1; i < len; i++) {
-        if (i2c_read_byte(data++, I2C_ACK) == I2C_STATUS_ERROR) {
-            return rx_count;
-        }
-        rx_count++;
-    }
-    if (i2c_read_byte(data, I2C_NACK) == I2C_STATUS_OK) {
-        rx_count++;
-    }
-    return rx_count;
+	size_t rx_count = 0;
+	for (size_t i = 1; i < len; i++) {
+		if (i2c_read_byte(data++, I2C_ACK) == I2C_STATUS_ERROR) {
+			return rx_count;
+		}
+		rx_count++;
+	}
+	if (i2c_read_byte(data, I2C_NACK) == I2C_STATUS_OK) {
+		rx_count++;
+	}
+	return rx_count;
 }
 
-/* Функция чтения нескольких байт подряд.*/
+/* Р¤СѓРЅРєС†РёСЏ С‡С‚РµРЅРёСЏ РЅРµСЃРєРѕР»СЊРєРёС… Р±Р°Р№С‚ РїРѕРґСЂСЏРґ.*/
 size_t i2c_write_multiple(unsigned char* data, const size_t len) {
-    size_t tx_count = 0;
-    for (size_t i = 0; i < len; i++) {
-        if (i2c_write_byte(*data++) == I2C_STATUS_ERROR) {
-            return tx_count;
-        }
-        tx_count++;
-    }
-    return tx_count;
+	size_t tx_count = 0;
+	for (size_t i = 0; i < len; i++) {
+		if (i2c_write_byte(*data++) == I2C_STATUS_ERROR) {
+			return tx_count;
+		}
+		tx_count++;
+	}
+	return tx_count;
 }

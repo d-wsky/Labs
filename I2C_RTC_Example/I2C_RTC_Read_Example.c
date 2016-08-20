@@ -1,13 +1,13 @@
-/*
+п»ї/*
  * I2C_RTC_Example.c
  *
  * Created: 13.09.2011 22:19:34
- *  Author: Денис Васильковский
+ *  Author: Р”РµРЅРёСЃ Р’Р°СЃРёР»СЊРєРѕРІСЃРєРёР№
  *
- *   About: Пример использования шины I2C для получения данных с внешней
- *          микросхемы часов реального времени. После старта МК отображает
- *          текущее время и дату на знакоместном ЖКИ, подключенном по
- *          стандартному интерфейсу UNI-DS3.
+ *   About: РџСЂРёРјРµСЂ РёСЃРїРѕР»СЊР·РѕРІР°РЅРёСЏ С€РёРЅС‹ I2C РґР»СЏ РїРѕР»СѓС‡РµРЅРёСЏ РґР°РЅРЅС‹С… СЃ РІРЅРµС€РЅРµР№
+ *          РјРёРєСЂРѕСЃС…РµРјС‹ С‡Р°СЃРѕРІ СЂРµР°Р»СЊРЅРѕРіРѕ РІСЂРµРјРµРЅРё. РџРѕСЃР»Рµ СЃС‚Р°СЂС‚Р° РњРљ РѕС‚РѕР±СЂР°Р¶Р°РµС‚
+ *          С‚РµРєСѓС‰РµРµ РІСЂРµРјСЏ Рё РґР°С‚Сѓ РЅР° Р·РЅР°РєРѕРјРµСЃС‚РЅРѕРј Р–РљР, РїРѕРґРєР»СЋС‡РµРЅРЅРѕРј РїРѕ
+ *          СЃС‚Р°РЅРґР°СЂС‚РЅРѕРјСѓ РёРЅС‚РµСЂС„РµР№СЃСѓ UNI-DS3.
  */ 
 
 #include <avr/io.h>
@@ -19,61 +19,61 @@
 #define I2C_FREQ  100000
 #define LCD_WIDTH 16
 
-/* переводит входное число в формате BCD в сторку
-str длиной два символа с ведущим нулем */
+/* РїРµСЂРµРІРѕРґРёС‚ РІС…РѕРґРЅРѕРµ С‡РёСЃР»Рѕ РІ С„РѕСЂРјР°С‚Рµ BCD РІ СЃС‚РѕСЂРєСѓ
+str РґР»РёРЅРѕР№ РґРІР° СЃРёРјРІРѕР»Р° СЃ РІРµРґСѓС‰РёРј РЅСѓР»РµРј */
 void bcd_to_str(uint8_t num, char* str) {
-    str[0] = (num >> 4) + 0x30;
-    str[1] = (num & 0x0F) + 0x30;
+	str[0] = (num >> 4) + 0x30;
+	str[1] = (num & 0x0F) + 0x30;
 }
 
-/* Функция вывода времени на ЖКИ */
+/* Р¤СѓРЅРєС†РёСЏ РІС‹РІРѕРґР° РІСЂРµРјРµРЅРё РЅР° Р–РљР */
 void put_time(pcf8583_time_t* t) {
-    hd44780_gotoxy(0, 0);
-    /* Первая строка: время */
-    {
-        char buf[] = {' ', ' ', ':', ' ', ' ', ':', ' ', ' ', '.', ' ', ' ', '\0'};
-        const size_t HOUR_POS = 0;
-        const size_t MIN_POS = 3;
-        const size_t SEC_POS = 6;
-        const size_t HSEC_POS = 9;
-        bcd_to_str(t->hour, &buf[HOUR_POS]);
-        bcd_to_str(t->min,  &buf[MIN_POS]);
-        bcd_to_str(t->sec,  &buf[SEC_POS]);
-        bcd_to_str(t->hsec, &buf[HSEC_POS]);
-        hd44780_puts(buf);
-    }
-    /* Вторая строка: дата */
-    hd44780_gotoxy(0, 1);
-    {
-        char buf[LCD_WIDTH] = {' ', ' ', '/', ' ', ' ', '/', ' ', ' ', '\0'};
-        const size_t DATE_POS = 0;
-        const size_t MONTH_POS = 3;
-        const size_t YEAR_POS = 6;
-        bcd_to_str(t->date,  &buf[DATE_POS]);
-        bcd_to_str(t->month, &buf[MONTH_POS]);
-        bcd_to_str(t->year,  &buf[YEAR_POS]);
-        hd44780_puts(buf);
-    }
+	hd44780_gotoxy(0, 0);
+	/* РџРµСЂРІР°СЏ СЃС‚СЂРѕРєР°: РІСЂРµРјСЏ */
+	{
+		char buf[] = {' ', ' ', ':', ' ', ' ', ':', ' ', ' ', '.', ' ', ' ', '\0'};
+		const size_t HOUR_POS = 0;
+		const size_t MIN_POS = 3;
+		const size_t SEC_POS = 6;
+		const size_t HSEC_POS = 9;
+		bcd_to_str(t->hour, &buf[HOUR_POS]);
+		bcd_to_str(t->min,  &buf[MIN_POS]);
+		bcd_to_str(t->sec,  &buf[SEC_POS]);
+		bcd_to_str(t->hsec, &buf[HSEC_POS]);
+		hd44780_puts(buf);
+	}
+	/* Р’С‚РѕСЂР°СЏ СЃС‚СЂРѕРєР°: РґР°С‚Р° */
+	hd44780_gotoxy(0, 1);
+	{
+		char buf[LCD_WIDTH] = {' ', ' ', '/', ' ', ' ', '/', ' ', ' ', '\0'};
+		const size_t DATE_POS = 0;
+		const size_t MONTH_POS = 3;
+		const size_t YEAR_POS = 6;
+		bcd_to_str(t->date,  &buf[DATE_POS]);
+		bcd_to_str(t->month, &buf[MONTH_POS]);
+		bcd_to_str(t->year,  &buf[YEAR_POS]);
+		hd44780_puts(buf);
+	}
 }
 
 int main(void)
 {
-     hd44780_init(Phys2Row5x8, OutNorm, CursorMode2);
-    hd44780_clear();
-    
-    i2c_init(I2C_FREQ);
-        
+ 	hd44780_init(Phys2Row5x8, OutNorm, CursorMode2);
+	hd44780_clear();
+	
+	i2c_init(I2C_FREQ);
+		
     while (1) {
-        pcf8583_time_t t;
-        /* Считывание времени */
-        pcf8583_read_time(&t);
-        
-        /* Вывод времени */
-        put_time(&t);
-        
-        /* Пауза */
-        _delay_ms(500);
-    };
-    
-    return 0;
+		pcf8583_time_t t;
+		/* РЎС‡РёС‚С‹РІР°РЅРёРµ РІСЂРµРјРµРЅРё */
+		pcf8583_read_time(&t);
+		
+		/* Р’С‹РІРѕРґ РІСЂРµРјРµРЅРё */
+		put_time(&t);
+		
+		/* РџР°СѓР·Р° */
+		_delay_ms(500);
+	};
+	
+	return 0;
 }

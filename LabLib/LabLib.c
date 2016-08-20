@@ -53,7 +53,7 @@ int main(void)
 {
     setup();
 
-    sei();
+	sei();
     
     while (1) {
         loop();

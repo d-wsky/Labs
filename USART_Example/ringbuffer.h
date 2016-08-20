@@ -3,9 +3,9 @@
 #define BUFFER_MAX_SIZE   ((size_t) 16)
 
 struct ringbuffer {
-    size_t head;
-    size_t tail;
-    char   array[BUFFER_MAX_SIZE];
+	size_t head;
+	size_t tail;
+	char   array[BUFFER_MAX_SIZE];
 };
 
 void ringbuffer_init(struct ringbuffer*);
