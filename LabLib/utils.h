@@ -46,14 +46,14 @@
 
 \code
 void printArrSize(uint8_t * arr_ptr) {
-	printf("Размер массива arr_ptr = %d", ARRAY_SIZE(arr_ptr));
+    printf("Размер массива arr_ptr = %d", ARRAY_SIZE(arr_ptr));
 }
 
 void loop() {
-	uint8_t arr[] = {1, 2, 3, 4, 5};
-	printArrSize(arr);
+    uint8_t arr[] = {1, 2, 3, 4, 5};
+    printArrSize(arr);
 
-	printf("Размер массива arr = %d", ARRAY_SIZE(arr));
+    printf("Размер массива arr = %d", ARRAY_SIZE(arr));
 }
 \endcode
 

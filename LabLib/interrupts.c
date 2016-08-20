@@ -44,16 +44,16 @@ static inline void disableIrq(IrqPin_t pin);
 static const uint8_t MODE_MASK = 3;
 
 ISR(INT0_vect) {
-	if (callbacks[0] != NULL) {
-		callbacks[0]();
-	}
+    if (callbacks[0] != NULL) {
+        callbacks[0]();
+    }
 }
 
 #define AUTOGEN_ISR(n)                        \
 ISR(INT##n##_vect) {                      \
-	if (callbacks[n] != NULL) {           \
-		callbacks[n]();                   \
-	}                                     \
+    if (callbacks[n] != NULL) {           \
+        callbacks[n]();                   \
+    }                                     \
 }
 
 AUTOGEN_ISR(1);
@@ -65,44 +65,44 @@ AUTOGEN_ISR(6);
 AUTOGEN_ISR(7);
 
 void interruptAttach(IrqPin_t pin, Isr_t isr, IrqMode_t mode) {
-	// \todo assert(pin < IRQ_SOURCES_AMOUNT);
-	// \todo assert(callbacks[pin] == NULL);
-	callbacks[pin] = isr;
-	enableIrq(pin, mode);	
+    // \todo assert(pin < IRQ_SOURCES_AMOUNT);
+    // \todo assert(callbacks[pin] == NULL);
+    callbacks[pin] = isr;
+    enableIrq(pin, mode);    
 }
 
 static inline void enableIrq(IrqPin_t pin, IrqMode_t mode) {
-	// \todo atomic_start();
-	if (pin < IRQ_PIN_4) {
-		EICRA &= ~(MODE_MASK << (pin * 2));
-		EICRA |=   mode      << (pin * 2);
-	}
-	else {
-		EICRA &= ~(MODE_MASK << ((pin - IRQ_PIN_4) * 2));
-		EICRA |=   mode      << ((pin - IRQ_PIN_4) * 2);
-	}
-	EIFR   = _BV(pin);
-	EIMSK |= _BV(pin);
-	// \todo atomic_end();
+    // \todo atomic_start();
+    if (pin < IRQ_PIN_4) {
+        EICRA &= ~(MODE_MASK << (pin * 2));
+        EICRA |=   mode      << (pin * 2);
+    }
+    else {
+        EICRA &= ~(MODE_MASK << ((pin - IRQ_PIN_4) * 2));
+        EICRA |=   mode      << ((pin - IRQ_PIN_4) * 2);
+    }
+    EIFR   = _BV(pin);
+    EIMSK |= _BV(pin);
+    // \todo atomic_end();
 }
 
 void interruptDeattach(IrqPin_t pin) {
-	// \todo assert(pin < IRQ_SOURCES_AMOUNT);
-	// \todo assert(callbacks[pin] != NULL);
-	disableIrq(pin);
-	callbacks[pin] = NULL;
+    // \todo assert(pin < IRQ_SOURCES_AMOUNT);
+    // \todo assert(callbacks[pin] != NULL);
+    disableIrq(pin);
+    callbacks[pin] = NULL;
 }
 
 static inline void disableIrq(IrqPin_t pin) {
-	// \todo atomic_start
-	EIMSK |= _BV(pin);
-	if (pin < IRQ_PIN_4) {
-		EICRA &= ~(MODE_MASK << (pin * 2));
-	}
-	else {
-		EICRA &= ~(MODE_MASK << ((pin - IRQ_PIN_4) * 2));
-	}
-	// \todo atomic_end
-	EIFR   = _BV(pin);
+    // \todo atomic_start
+    EIMSK |= _BV(pin);
+    if (pin < IRQ_PIN_4) {
+        EICRA &= ~(MODE_MASK << (pin * 2));
+    }
+    else {
+        EICRA &= ~(MODE_MASK << ((pin - IRQ_PIN_4) * 2));
+    }
+    // \todo atomic_end
+    EIFR   = _BV(pin);
 }
 

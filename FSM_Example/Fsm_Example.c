@@ -44,19 +44,19 @@
 #include "delay.h"
 
 typedef enum {
-	S_MOVING_DOWN,
-	S_MOVING_RIGHT,
-	S_MOVING_UP,
-	S_MOVING_LEFT,
+    S_MOVING_DOWN,
+    S_MOVING_RIGHT,
+    S_MOVING_UP,
+    S_MOVING_LEFT,
 } FsmStates_t;
 
 typedef enum {
-	E_TIMEOUT,
+    E_TIMEOUT,
 } FsmEvents_t;
 
 typedef struct {
-	GpioPort_t port;
-	GpioPin_t  pin;
+    GpioPort_t port;
+    GpioPin_t  pin;
 } LedPosition_t;
 
 bool g_onBottom(void * p_data);
@@ -70,86 +70,86 @@ void a_moveLeft(void * p_data);
 
 Fsm_t fsm;
 FsmTable_t fsmTable[] = {
- 	FSM_STATE     ( S_MOVING_DOWN ),
- 	FSM_TRANSITION( E_TIMEOUT, g_onBottom,    a_moveRight, S_MOVING_RIGHT ),
-	FSM_TRANSITION( E_TIMEOUT, FSM_OTHERWISE, a_moveDown,  FSM_SAME_STATE ),
+     FSM_STATE     ( S_MOVING_DOWN ),
+     FSM_TRANSITION( E_TIMEOUT, g_onBottom,    a_moveRight, S_MOVING_RIGHT ),
+    FSM_TRANSITION( E_TIMEOUT, FSM_OTHERWISE, a_moveDown,  FSM_SAME_STATE ),
 
-	FSM_STATE     ( S_MOVING_RIGHT ),
-	FSM_TRANSITION( E_TIMEOUT, g_onRightSide, a_moveUp,    S_MOVING_UP ),
-	FSM_TRANSITION( E_TIMEOUT, FSM_OTHERWISE, a_moveRight, FSM_SAME_STATE ),
+    FSM_STATE     ( S_MOVING_RIGHT ),
+    FSM_TRANSITION( E_TIMEOUT, g_onRightSide, a_moveUp,    S_MOVING_UP ),
+    FSM_TRANSITION( E_TIMEOUT, FSM_OTHERWISE, a_moveRight, FSM_SAME_STATE ),
 
-	FSM_STATE     ( S_MOVING_UP ),
-	FSM_TRANSITION( E_TIMEOUT, g_onTop,       a_moveLeft,  S_MOVING_LEFT ),
-	FSM_TRANSITION( E_TIMEOUT, FSM_OTHERWISE, a_moveUp,    FSM_SAME_STATE ),
+    FSM_STATE     ( S_MOVING_UP ),
+    FSM_TRANSITION( E_TIMEOUT, g_onTop,       a_moveLeft,  S_MOVING_LEFT ),
+    FSM_TRANSITION( E_TIMEOUT, FSM_OTHERWISE, a_moveUp,    FSM_SAME_STATE ),
 
-	FSM_STATE     ( S_MOVING_LEFT ),
-	FSM_TRANSITION( E_TIMEOUT, g_onLeftSide,  a_moveDown,  S_MOVING_DOWN ),
-	FSM_TRANSITION( E_TIMEOUT, FSM_OTHERWISE, a_moveLeft,  FSM_SAME_STATE ),
+    FSM_STATE     ( S_MOVING_LEFT ),
+    FSM_TRANSITION( E_TIMEOUT, g_onLeftSide,  a_moveDown,  S_MOVING_DOWN ),
+    FSM_TRANSITION( E_TIMEOUT, FSM_OTHERWISE, a_moveLeft,  FSM_SAME_STATE ),
 };
 
 bool g_onBottom(void * p_data) {
-	LedPosition_t * ledPosition = (LedPosition_t *)p_data;
-	return ledPosition->pin == GPIO_PIN7;
+    LedPosition_t * ledPosition = (LedPosition_t *)p_data;
+    return ledPosition->pin == GPIO_PIN7;
 }
 
 bool g_onRightSide(void * p_data) {
-	LedPosition_t * ledPosition = (LedPosition_t *)p_data;
-	return ledPosition->port == GPIO_PORTD;
+    LedPosition_t * ledPosition = (LedPosition_t *)p_data;
+    return ledPosition->port == GPIO_PORTD;
 }
 
 bool g_onTop(void * p_data) {
-	LedPosition_t * ledPosition = (LedPosition_t *)p_data;
-	return ledPosition->pin == GPIO_PIN0;
+    LedPosition_t * ledPosition = (LedPosition_t *)p_data;
+    return ledPosition->pin == GPIO_PIN0;
 }
 
 bool g_onLeftSide(void * p_data) {
-	LedPosition_t * ledPosition = (LedPosition_t *)p_data;
-	return ledPosition->port == GPIO_PORTA;
+    LedPosition_t * ledPosition = (LedPosition_t *)p_data;
+    return ledPosition->port == GPIO_PORTA;
 }
 
 void a_moveDown(void * p_data) {
-	LedPosition_t * ledPosition = (LedPosition_t *)p_data;
-	ledPosition->pin <<= 1;
+    LedPosition_t * ledPosition = (LedPosition_t *)p_data;
+    ledPosition->pin <<= 1;
 }
 
 void a_moveRight(void * p_data) {
-	LedPosition_t * ledPosition = (LedPosition_t *)p_data;
-	ledPosition->port++;
+    LedPosition_t * ledPosition = (LedPosition_t *)p_data;
+    ledPosition->port++;
 }
 
 void a_moveUp(void * p_data) {
-	LedPosition_t * ledPosition = (LedPosition_t *)p_data;
-	ledPosition->pin >>= 1;
+    LedPosition_t * ledPosition = (LedPosition_t *)p_data;
+    ledPosition->pin >>= 1;
 }
 
 void a_moveLeft(void * p_data) {
-	LedPosition_t * ledPosition = (LedPosition_t *)p_data;
-	ledPosition->port--;
+    LedPosition_t * ledPosition = (LedPosition_t *)p_data;
+    ledPosition->port--;
 }
 
 void updateLeds(const LedPosition_t * led) {
-	gpioPinClear(GPIO_PORTA, GPIO_PIN_ALL);
-	gpioPinClear(GPIO_PORTB, GPIO_PIN_ALL);
-	gpioPinClear(GPIO_PORTC, GPIO_PIN_ALL);
-	gpioPinClear(GPIO_PORTD, GPIO_PIN_ALL);
-	gpioPinSet(led->port, led->pin);
+    gpioPinClear(GPIO_PORTA, GPIO_PIN_ALL);
+    gpioPinClear(GPIO_PORTB, GPIO_PIN_ALL);
+    gpioPinClear(GPIO_PORTC, GPIO_PIN_ALL);
+    gpioPinClear(GPIO_PORTD, GPIO_PIN_ALL);
+    gpioPinSet(led->port, led->pin);
 }
 
 void setup(void) {
-	gpioPinModeSet(GPIO_PORTA, GPIO_PIN_ALL, GPIO_MODE_OUT);
-	gpioPinModeSet(GPIO_PORTB, GPIO_PIN_ALL, GPIO_MODE_OUT);
-	gpioPinModeSet(GPIO_PORTC, GPIO_PIN_ALL, GPIO_MODE_OUT);
-	gpioPinModeSet(GPIO_PORTD, GPIO_PIN_ALL, GPIO_MODE_OUT);
-	fsmInit(&fsm, fsmTable, ARRAY_SIZE(fsmTable), S_MOVING_DOWN);
+    gpioPinModeSet(GPIO_PORTA, GPIO_PIN_ALL, GPIO_MODE_OUT);
+    gpioPinModeSet(GPIO_PORTB, GPIO_PIN_ALL, GPIO_MODE_OUT);
+    gpioPinModeSet(GPIO_PORTC, GPIO_PIN_ALL, GPIO_MODE_OUT);
+    gpioPinModeSet(GPIO_PORTD, GPIO_PIN_ALL, GPIO_MODE_OUT);
+    fsmInit(&fsm, fsmTable, ARRAY_SIZE(fsmTable), S_MOVING_DOWN);
 }
 
 void loop(void) {
-	static LedPosition_t ledPosition = {
-		.port = GPIO_PORTA,
-		.pin  = GPIO_PIN0,
-	};
+    static LedPosition_t ledPosition = {
+        .port = GPIO_PORTA,
+        .pin  = GPIO_PIN0,
+    };
 
-	fsmEventPost(E_TIMEOUT, &fsm, &ledPosition);
-	updateLeds(&ledPosition);
-	delayMs(500);
+    fsmEventPost(E_TIMEOUT, &fsm, &ledPosition);
+    updateLeds(&ledPosition);
+    delayMs(500);
 }

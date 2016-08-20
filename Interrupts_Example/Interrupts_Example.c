@@ -1,4 +1,4 @@
-п»ї/* 
+/* 
  * Copyright (c) 2016, Denis Vasilkovskii
  * All rights reserved.
  *
@@ -31,12 +31,12 @@
  * Created: 03.10.2011 3:07:39
  *  Author: Denis Vasilkovskii
  *
- *   About: РџСЂРёРјРµСЂ РїСЂРѕРіСЂР°РјРјС‹, РёСЃРїРѕР»СЊР·СѓСЋС‰РµР№ РїСЂРµСЂС‹РІР°РЅРёСЏ РЅР° РІРЅРµС€РЅРµР№ РЅРѕР¶РєРµ 
- *          PD0 (INT0), РґР»СЏ С‚РѕРіРѕ, С‡С‚РѕР±С‹ РїРµСЂРµРєР»СЋС‡Р°С‚СЊ СЃРѕСЃС‚РѕСЏРЅРёРµ СЃРІРµС‚РѕРґРёРѕРґР° PA0.
- *          РљСЂРѕРјРµ С‚РѕРіРѕ, Р±СѓРґСѓС‡Рё СЃРєРѕРјРїРёР»РёСЂРѕРІР°РЅРЅС‹Рј Рё Р·Р°РїСѓС‰РµРЅРЅС‹Рј РІ СЂРµР¶РёРјРµ РѕС‚Р»Р°РґРєРё,
- *          РґР°РЅРЅС‹Р№ РїСЂРёРјРµСЂ РґРµРјРѕРЅСЃС‚СЂРёСЂСѓРµС‚ РїСЂРѕС†РµСЃСЃ СЃР»РѕР¶РµРЅРёСЏ РјРЅРѕРіРѕР±Р°Р№С‚РѕРІС‹С…
- *          РїРµСЂРµРјРµРЅРЅС‹С…, РєРѕРіРґР° СЃРєР»Р°РґС‹РІР°С‚СЊ РјРѕР¶РЅРѕ С‚РѕР»СЊРєРѕ РїРѕР±Р°Р№С‚РѕРІРѕ, Р° С‚Р°РєР¶Рµ
- *          РјРµС…Р°РЅРёР·Рј СЃРѕС…СЂР°РЅРµРЅРёСЏ-РІРѕСЃСЃС‚Р°РЅРѕРІР»РµРЅРёСЏ РєРѕРЅС‚РµРєСЃС‚Р° РїСЂРё РІС‹Р·РѕРІРµ РїСЂРµСЂС‹РІР°РЅРёСЏ.
+ *   About: Пример программы, использующей прерывания на внешней ножке 
+ *          PD0 (INT0), для того, чтобы переключать состояние светодиода PA0.
+ *          Кроме того, будучи скомпилированным и запущенным в режиме отладки,
+ *          данный пример демонстрирует процесс сложения многобайтовых
+ *          переменных, когда складывать можно только побайтово, а также
+ *          механизм сохранения-восстановления контекста при вызове прерывания.
  */ 
 
 #include "structure.h"
@@ -44,25 +44,25 @@
 #include "interrupts.h"
 
 void irq0_handler(void) {
-	GpioLevel_t level = gpioPinGet(GPIO_PORTD, GPIO_PIN0);
-	if (level == GPIO_LEVEL_HIGH) {
-		gpioPinSet(GPIO_PORTA, GPIO_PIN0);
-	}
-	else {
-		gpioPinClear(GPIO_PORTA, GPIO_PIN0);
-	}
+    GpioLevel_t level = gpioPinGet(GPIO_PORTD, GPIO_PIN0);
+    if (level == GPIO_LEVEL_HIGH) {
+        gpioPinSet(GPIO_PORTA, GPIO_PIN0);
+    }
+    else {
+        gpioPinClear(GPIO_PORTA, GPIO_PIN0);
+    }
 }
 
 void setup() {
-	gpioPinModeSet(GPIO_PORTA, GPIO_PIN0, GPIO_MODE_OUT);
-	gpioPinModeSet(GPIO_PORTD, GPIO_PIN0, GPIO_MODE_IN);
-	interruptAttach(IRQ_PIN_0, irq0_handler, IRQ_MODE_CHANGE);
+    gpioPinModeSet(GPIO_PORTA, GPIO_PIN0, GPIO_MODE_OUT);
+    gpioPinModeSet(GPIO_PORTD, GPIO_PIN0, GPIO_MODE_IN);
+    interruptAttach(IRQ_PIN_0, irq0_handler, IRQ_MODE_CHANGE);
 }
 
 void loop() {
-	volatile int a = 0x1234, b = 0x5678, c;
-	c = a + b;
-	// СЃР»РµРґСѓСЋС‰Р°СЏ СЃС‚СЂРѕРєР° РЅСѓР¶РЅР°, С‡С‚РѕР±С‹ РёР·Р±Р°РІРёС‚СЊСЃСЏ РѕС‚ РѕС€РёР±РєРё
-	// variable 'c' set but not used
-	(void)c;
+    volatile int a = 0x1234, b = 0x5678, c;
+    c = a + b;
+    // следующая строка нужна, чтобы избавиться от ошибки
+    // variable 'c' set but not used
+    (void)c;
 }

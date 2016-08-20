@@ -38,69 +38,69 @@
 #include <stddef.h>
 
 static inline bool IsState(FsmTableItem_t * item) {
-	return item->event == FSM_NO_EVENT;
+    return item->event == FSM_NO_EVENT;
 }
 
 void fsmInit(Fsm_t * fsm, FsmTable_t * table, uint8_t table_size, FsmState_t init_state) {
-	fsm->table = table;
-	fsm->current_state = init_state;
-	fsm->table_size = table_size;
+    fsm->table = table;
+    fsm->current_state = init_state;
+    fsm->table_size = table_size;
 }
 
 static uint8_t FindState(Fsm_t * fsm, FsmState_t state, uint8_t starting_pos) {
-	for (uint8_t i = starting_pos; i < fsm->table_size; i++) {
-		if (IsState(&fsm->table[i])) {
-			if (fsm->table[i].next_state == state) {
-				return i;
-			}
-		}
-	}
-	return UINT8_MAX;
+    for (uint8_t i = starting_pos; i < fsm->table_size; i++) {
+        if (IsState(&fsm->table[i])) {
+            if (fsm->table[i].next_state == state) {
+                return i;
+            }
+        }
+    }
+    return UINT8_MAX;
 }
 
 static uint8_t FindEvent(Fsm_t * fsm, FsmEvent_t event, uint8_t starting_pos) {
-	for (uint8_t i = starting_pos; i < fsm->table_size; i++) {
-		if (fsm->table[i].event == event) {
-			return i;
-		}
-		if (IsState(&fsm->table[i])) {
-			break;
-		}
-	}
-	return UINT8_MAX;
+    for (uint8_t i = starting_pos; i < fsm->table_size; i++) {
+        if (fsm->table[i].event == event) {
+            return i;
+        }
+        if (IsState(&fsm->table[i])) {
+            break;
+        }
+    }
+    return UINT8_MAX;
 }
 
 static bool TryStateForEvent(Fsm_t * fsm, FsmState_t state, FsmEvent_t event, void * p_data) {
-	uint8_t state_position = FindState(fsm, state, 0);
-	if (state_position != UINT8_MAX) {
-		uint8_t event_position = FindEvent(fsm, event, state_position + 1);
-		while ((event_position != UINT8_MAX)) {
-			FsmTableItem_t * p_item = &fsm->table[event_position];
-			bool guard_pass = true;
-			if (p_item->guard != FSM_NO_GUARD) {
-				guard_pass = p_item->guard(p_data);
-			}
-			if (guard_pass) {
-				if (p_item->action != FSM_NO_ACTION) {
-					p_item->action(p_data);
-				}
-				if (p_item->next_state != FSM_SAME_STATE) {
-					fsm->current_state = p_item->next_state;
-				}
-				return false;
-			}
-			event_position = FindEvent(fsm, event, event_position + 1);
-		}
-	}
-	else {
-		return false;
-	}
-	return true;
+    uint8_t state_position = FindState(fsm, state, 0);
+    if (state_position != UINT8_MAX) {
+        uint8_t event_position = FindEvent(fsm, event, state_position + 1);
+        while ((event_position != UINT8_MAX)) {
+            FsmTableItem_t * p_item = &fsm->table[event_position];
+            bool guard_pass = true;
+            if (p_item->guard != FSM_NO_GUARD) {
+                guard_pass = p_item->guard(p_data);
+            }
+            if (guard_pass) {
+                if (p_item->action != FSM_NO_ACTION) {
+                    p_item->action(p_data);
+                }
+                if (p_item->next_state != FSM_SAME_STATE) {
+                    fsm->current_state = p_item->next_state;
+                }
+                return false;
+            }
+            event_position = FindEvent(fsm, event, event_position + 1);
+        }
+    }
+    else {
+        return false;
+    }
+    return true;
 }
 
 void fsmEventPost(FsmEvent_t event, Fsm_t * fsm, void * p_data) {
- 	bool continue_with_any_state = TryStateForEvent(fsm, fsm->current_state, event, p_data);
- 	if (continue_with_any_state) {
- 		TryStateForEvent(fsm, FSM_ANY_STATE, event, p_data);
- 	}
+     bool continue_with_any_state = TryStateForEvent(fsm, fsm->current_state, event, p_data);
+     if (continue_with_any_state) {
+         TryStateForEvent(fsm, FSM_ANY_STATE, event, p_data);
+     }
 }
