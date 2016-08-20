@@ -28,8 +28,8 @@
 // Функция-обработчик прерывания по
 // совпадению с OCR1A
 ISR(TIMER1_COMPA_vect) {
-	// Переключение состояния светодиода
-	PORTA = PORTA ^ 1;
+    // Переключение состояния светодиода
+    PORTA = PORTA ^ 1;
 }
 
 // Функция считывает содержимое порта B,
@@ -37,80 +37,80 @@ ISR(TIMER1_COMPA_vect) {
 // должно совпадать при считывании
 // jit_delay раз подряд.
 char button_state(char jit_delay) {
-	char button, i;
-	button = PINB;
-		
-	for (i = 0; i < jit_delay - 1; i++) {
-		if (button != PINB) break;
-	};
-	
-	return button;
+    char button, i;
+    button = PINB;
+        
+    for (i = 0; i < jit_delay - 1; i++) {
+        if (button != PINB) break;
+    };
+    
+    return button;
 }
 
 // Функция, изменяющая интервал задержки, записывая
 // новое значение в регистр сравнения OCR1A
 char change_delay_time(char new_interval) {
-	new_interval++;
-	if (new_interval > 2) new_interval = 0;
-	// Определение необходимого интервала
-	switch (new_interval) {
-	    case 0: OCR1A = DELAY_VAL(1); break;
-	    case 1: OCR1A = DELAY_VAL(2); break;
-	    case 2: OCR1A = DELAY_VAL(4); break;
-	};
-	return new_interval;
+    new_interval++;
+    if (new_interval > 2) new_interval = 0;
+    // Определение необходимого интервала
+    switch (new_interval) {
+        case 0: OCR1A = DELAY_VAL(1); break;
+        case 1: OCR1A = DELAY_VAL(2); break;
+        case 2: OCR1A = DELAY_VAL(4); break;
+    };
+    return new_interval;
 }
 
 // Предварительная настройка таймера
 void timer_init() {
-	// Инициализация Т/С1
-	OCR1A  = DELAY_VAL(1);
-	TCCR1A = 0x00;
-	// Выбор режима CTC и предделителя
-	TCCR1B = (1 << WGM12) | (1 << CS12) | (1 << CS10);
-	TCCR1C = 0x00;
-	// Разрешаем прерывание по достижению максимума
-	TIMSK  = (1 << OCIE1A);
-	ETIMSK = 0x00;
+    // Инициализация Т/С1
+    OCR1A  = DELAY_VAL(1);
+    TCCR1A = 0x00;
+    // Выбор режима CTC и предделителя
+    TCCR1B = (1 << WGM12) | (1 << CS12) | (1 << CS10);
+    TCCR1C = 0x00;
+    // Разрешаем прерывание по достижению максимума
+    TIMSK  = (1 << OCIE1A);
+    ETIMSK = 0x00;
 }
 
 int main(void)
 {
-	// Инициализация переменных
-	/* переключатель режимов задержки */
-	char delay_interval = 0;
-	/* защита от повторной обработки кнопки */
-	char button_handled = 0;
-	
-	// Инициализация портов
-	DDRA  = 0x01;
-	DDRB  = 0x00;
-	PORTB = 0x01;
-	
-	timer_init();
-	
-	// Глобальное разрешение прерываний
-	sei();
-	
-	// Рабочий цикл
+    // Инициализация переменных
+    /* переключатель режимов задержки */
+    char delay_interval = 0;
+    /* защита от повторной обработки кнопки */
+    char button_handled = 0;
+    
+    // Инициализация портов
+    DDRA  = 0x01;
+    DDRB  = 0x00;
+    PORTB = 0x01;
+    
+    timer_init();
+    
+    // Глобальное разрешение прерываний
+    sei();
+    
+    // Рабочий цикл
     while(1)
     {
-		// Действия при нажатой кнопке
-		if ((button_state(DELAY_JITTER)==1) && (!button_handled)) {
-			// Изменяем переключатель задержки
-			delay_interval = change_delay_time(delay_interval);
-			// Переключение светодиода,
-			// указывающее, что нажатие на 
-			// кнопку было обработано
-			TCNT1  = 0x0000;
-			PORTA ^= 1;
-			// Установка защелки
-			button_handled = 1;
-		};
-		
-		// Действия при отжатой кнопке
-		if (button_state(DELAY_JITTER)==0)	
-		  // Снятие защелки
-		  button_handled = 0;
+        // Действия при нажатой кнопке
+        if ((button_state(DELAY_JITTER)==1) && (!button_handled)) {
+            // Изменяем переключатель задержки
+            delay_interval = change_delay_time(delay_interval);
+            // Переключение светодиода,
+            // указывающее, что нажатие на 
+            // кнопку было обработано
+            TCNT1  = 0x0000;
+            PORTA ^= 1;
+            // Установка защелки
+            button_handled = 1;
+        };
+        
+        // Действия при отжатой кнопке
+        if (button_state(DELAY_JITTER)==0)    
+          // Снятие защелки
+          button_handled = 0;
     }
 }

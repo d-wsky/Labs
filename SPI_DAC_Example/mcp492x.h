@@ -36,37 +36,37 @@
 
 /*! \brief С помощью этого типа данных можно выбрать канал преобразования.*/
 typedef enum {
-	MCP492X_CHANNEL_A = 0 << MCP492X_CHANNEL_POS,  /*!< Для MCP4921 доступен только этот канал.*/
-	MCP492X_CHANNEL_B = 1 << MCP492X_CHANNEL_POS,  /*!< Для MCP4922 возможен выбор между каналами.*/
+    MCP492X_CHANNEL_A = 0 << MCP492X_CHANNEL_POS,  /*!< Для MCP4921 доступен только этот канал.*/
+    MCP492X_CHANNEL_B = 1 << MCP492X_CHANNEL_POS,  /*!< Для MCP4922 возможен выбор между каналами.*/
 } Mcp492xChannel_t;
 
 /*! \brief С помощью этого типа данных можно выбрать использовать или нет
  * внутренний буфер ЦАП.*/
 typedef enum {
-	MCP492X_BUFFER_OFF = 0 << MCP492X_BUFFER_POS,  /*!< Входные данные сразу поступают на выход.*/
-	MCP492X_BUFFER_ON  = 1 << MCP492X_BUFFER_POS   /*!< Входные данные поступают на выход при низком уровне на LDAC.*/
+    MCP492X_BUFFER_OFF = 0 << MCP492X_BUFFER_POS,  /*!< Входные данные сразу поступают на выход.*/
+    MCP492X_BUFFER_ON  = 1 << MCP492X_BUFFER_POS   /*!< Входные данные поступают на выход при низком уровне на LDAC.*/
 } Mcp492xBuffer_t;
 
 /*! \brief С помощью этого типа данных можно выбрать использовать или нет
  * выходной усилительный каскад ЦАП.*/
 typedef enum {
-	MCP492X_OUTGAIN_1x = 1 << MCP492X_OUTGAIN_POS, /*!< Vout = Vref * D / 4096.*/
-	MCP492X_OUTGAIN_2x = 0 << MCP492X_OUTGAIN_POS, /*!< Vout = 2 * Vref * D / 4096.*/
+    MCP492X_OUTGAIN_1x = 1 << MCP492X_OUTGAIN_POS, /*!< Vout = Vref * D / 4096.*/
+    MCP492X_OUTGAIN_2x = 0 << MCP492X_OUTGAIN_POS, /*!< Vout = 2 * Vref * D / 4096.*/
 } Mcp492xGain_t;
 
 /*! \brief С помощью этого типа данных можно решить, включены ли аналоговые
  * цепи ЦАПа.*/
 typedef enum {
-	MCP492X_SHDN_OFF = 1 << MCP492X_SHDN_POS,      /*!< ЦАП включен в работу.*/
-	MCP492X_SHDN_ON  = 0 << MCP492X_SHDN_POS,      /*!< ЦАП отключен, выход в третьем состоянии.*/
+    MCP492X_SHDN_OFF = 1 << MCP492X_SHDN_POS,      /*!< ЦАП включен в работу.*/
+    MCP492X_SHDN_ON  = 0 << MCP492X_SHDN_POS,      /*!< ЦАП отключен, выход в третьем состоянии.*/
 } Mcp492xShutdown_t;
 
 /*! \brief Конфигурация ЦАП.*/
 typedef struct {
-	Mcp492xChannel_t  channel;
-	Mcp492xBuffer_t   buf;
-	Mcp492xGain_t     gain;
-	Mcp492xShutdown_t shdn;
+    Mcp492xChannel_t  channel;
+    Mcp492xBuffer_t   buf;
+    Mcp492xGain_t     gain;
+    Mcp492xShutdown_t shdn;
 } Mcp492xConfig_t;
 
 /*! \brief Инициализация ЦАП.

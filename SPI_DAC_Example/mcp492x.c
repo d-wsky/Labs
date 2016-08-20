@@ -15,25 +15,25 @@ static uint8_t internal_config;
 
 void mcp492x_init()
 {
-	MCP492X_LDAC_DDR_REG |= 1 << MCP492X_LDAC_PIN;
-	MCP492X_CS_DDR_REG   |= 1 << MCP492X_CS_PIN;
-	
-	MCP492X_LDAC_HIGH;
-	MCP492X_CS_DISABLE;
-	MCP492X_LDAC_LOW;
+    MCP492X_LDAC_DDR_REG |= 1 << MCP492X_LDAC_PIN;
+    MCP492X_CS_DDR_REG   |= 1 << MCP492X_CS_PIN;
+    
+    MCP492X_LDAC_HIGH;
+    MCP492X_CS_DISABLE;
+    MCP492X_LDAC_LOW;
 }
 
 void mcp492x_set_config(Mcp492xConfig_t* config)
 {
-	internal_config = config->channel | config->buf | config->gain | config->shdn;
+    internal_config = config->channel | config->buf | config->gain | config->shdn;
 }
 
 void mcp492x_write_data(uint16_t value)
 {
-	MCP492X_CS_ENABLE;
-	value &= MCP492X_OUTPUT_MASK;
-	value |= internal_config << 8;
-	spi_write_blocking((uint8_t)(value >> 8));
-	spi_write_blocking((uint8_t) value);
-	MCP492X_CS_DISABLE;
+    MCP492X_CS_ENABLE;
+    value &= MCP492X_OUTPUT_MASK;
+    value |= internal_config << 8;
+    spi_write_blocking((uint8_t)(value >> 8));
+    spi_write_blocking((uint8_t) value);
+    MCP492X_CS_DISABLE;
 }

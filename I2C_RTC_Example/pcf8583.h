@@ -89,46 +89,46 @@
 
 /*! \brief Выбирает формат представления часов.*/
 typedef enum {
-	PCF8583_FORMAT_24H   = 0 << PCF8583_FORMAT_POS, /*!< 24-часовой формат.*/
-	PCF8583_FORMAT_12H   = 1 << PCF8583_FORMAT_POS  /*!< 12-часовой формат.*/
+    PCF8583_FORMAT_24H   = 0 << PCF8583_FORMAT_POS, /*!< 24-часовой формат.*/
+    PCF8583_FORMAT_12H   = 1 << PCF8583_FORMAT_POS  /*!< 12-часовой формат.*/
 } pcf8583_format_t;
 
 /*! \brief Выбирает режим работы часов.*/
 typedef enum {
-	PCF8583_MODE_32K       = 0 << PCF8583_MODE_POS, /*!< Часы от кварца 32768 Гц.*/
-	PCF8583_MODE_50HZ      = 1 << PCF8583_MODE_POS, /*!< Часы от сети 50 Гц.*/
-	PCF8583_MODE_COUNTER   = 2 << PCF8583_MODE_POS, /*!< Счетчик.*/
-	PCF8583_MODE_TEST      = 3 << PCF8583_MODE_POS, /*!< Тестовый режим.*/
+    PCF8583_MODE_32K       = 0 << PCF8583_MODE_POS, /*!< Часы от кварца 32768 Гц.*/
+    PCF8583_MODE_50HZ      = 1 << PCF8583_MODE_POS, /*!< Часы от сети 50 Гц.*/
+    PCF8583_MODE_COUNTER   = 2 << PCF8583_MODE_POS, /*!< Счетчик.*/
+    PCF8583_MODE_TEST      = 3 << PCF8583_MODE_POS, /*!< Тестовый режим.*/
 } pcf8583_mode_t;
 
 /*! \brief Задает режим срабатывания будильника.*/
 typedef enum {
-	PCF8583_ALARM_FUNC_OFF     = 0 << PCF8583_ALARM_FUNC_POS, /*!< Будильник отключен.*/
-	PCF8583_ALARM_FUNC_DAILY   = 1 << PCF8583_ALARM_FUNC_POS, /*!< Будильник срабатывает ежедневно.*/
-	PCF8583_ALARM_FUNC_WEEKDAY = 2 << PCF8583_ALARM_FUNC_POS, /*!< Будильник по дням недели.*/
-	PCF8583_ALARM_FUNC_DATED   = 3 << PCF8583_ALARM_FUNC_POS, /*!< Будильник срабатывает в заданную дату.*/
+    PCF8583_ALARM_FUNC_OFF     = 0 << PCF8583_ALARM_FUNC_POS, /*!< Будильник отключен.*/
+    PCF8583_ALARM_FUNC_DAILY   = 1 << PCF8583_ALARM_FUNC_POS, /*!< Будильник срабатывает ежедневно.*/
+    PCF8583_ALARM_FUNC_WEEKDAY = 2 << PCF8583_ALARM_FUNC_POS, /*!< Будильник по дням недели.*/
+    PCF8583_ALARM_FUNC_DATED   = 3 << PCF8583_ALARM_FUNC_POS, /*!< Будильник срабатывает в заданную дату.*/
 } pcf8583_alarm_func_t;
 
 /*! \brief Задает скорость счета таймера.*/
 typedef enum {
-	PCF8583_TIMER_FUNC_OFF     = 0 << PCF8583_TIMER_FUNC_POS, /*!< Таймер отключен.*/
-	PCF8583_TIMER_FUNC_HSEC    = 1 << PCF8583_TIMER_FUNC_POS, /*!< Таймер отсчитывает сотые доли секунды.*/
-	PCF8583_TIMER_FUNC_SEC     = 2 << PCF8583_TIMER_FUNC_POS, /*!< Таймер отсчитывает секунды.*/
-	PCF8583_TIMER_FUNC_MIN     = 3 << PCF8583_TIMER_FUNC_POS, /*!< Таймер отсчитывает минуты.*/
-	PCF8583_TIMER_FUNC_HOUR    = 4 << PCF8583_TIMER_FUNC_POS, /*!< Таймер отсчитывает часы.*/
-	PCF8583_TIMER_FUNC_DAY     = 5 << PCF8583_TIMER_FUNC_POS, /*!< Таймер отсчитывает дни.*/
+    PCF8583_TIMER_FUNC_OFF     = 0 << PCF8583_TIMER_FUNC_POS, /*!< Таймер отключен.*/
+    PCF8583_TIMER_FUNC_HSEC    = 1 << PCF8583_TIMER_FUNC_POS, /*!< Таймер отсчитывает сотые доли секунды.*/
+    PCF8583_TIMER_FUNC_SEC     = 2 << PCF8583_TIMER_FUNC_POS, /*!< Таймер отсчитывает секунды.*/
+    PCF8583_TIMER_FUNC_MIN     = 3 << PCF8583_TIMER_FUNC_POS, /*!< Таймер отсчитывает минуты.*/
+    PCF8583_TIMER_FUNC_HOUR    = 4 << PCF8583_TIMER_FUNC_POS, /*!< Таймер отсчитывает часы.*/
+    PCF8583_TIMER_FUNC_DAY     = 5 << PCF8583_TIMER_FUNC_POS, /*!< Таймер отсчитывает дни.*/
 } pcf8583_timer_func_t;
 
 /*! \brief Тип данных, который можно использовать для определения
 дня недели.*/
 typedef enum {
-	PCF8583_SUN = 0, /*!< Воскресенье.*/
-	PCF8583_MON,     /*!< Понедельник.*/
-	PCF8583_TUE,     /*!< Вторник.*/
-	PCF8583_WEN,     /*!< Среда.*/
-	PCF8583_THU,     /*!< Четверг.*/
-	PCF8583_FRI,     /*!< Пятница.*/
-	PCF8583_SAT      /*!< Суббота.*/
+    PCF8583_SUN = 0, /*!< Воскресенье.*/
+    PCF8583_MON,     /*!< Понедельник.*/
+    PCF8583_TUE,     /*!< Вторник.*/
+    PCF8583_WEN,     /*!< Среда.*/
+    PCF8583_THU,     /*!< Четверг.*/
+    PCF8583_FRI,     /*!< Пятница.*/
+    PCF8583_SAT      /*!< Суббота.*/
 } pcf8583_dow_t;
 
 /*! \brief Тип данных, используемый для приема и передачи времени
@@ -137,20 +137,20 @@ typedef enum {
 Для всех полей предполагается представление BCD, кроме случаев,
 указанных отдельно.*/
 typedef struct {
-	unsigned char hsec;  /*!< Сотые доли секунды (0x00 - 0x99).*/
-	unsigned char sec;   /*!< Секунды (0x00 - 0x59).*/
-	unsigned char min;   /*!< Минуты (0x00 - 0x59).*/
-	unsigned char hour;  /*!< Часы (0x00 - 0x12 или 0x24).*/
-	unsigned char am_pm; /*!< Переключатель до-после полудня. 0 - AM; 1 - PM.*/
-	unsigned char date;  /*!< Дата (0x01 - 0x31).
-	                          
-							  Значение зависит от месяца и года. Для февраля
-							  нулевого года максимум - 0x29.*/
-	unsigned char month; /*!< Месяц (0x01 - 0x12).*/
-	unsigned char year;  /*!< Год (0x00 - 0x03).
-	
-	                          Високосный год 0x00.*/
-	pcf8583_dow_t dow;   /*!< День недели.*/
+    unsigned char hsec;  /*!< Сотые доли секунды (0x00 - 0x99).*/
+    unsigned char sec;   /*!< Секунды (0x00 - 0x59).*/
+    unsigned char min;   /*!< Минуты (0x00 - 0x59).*/
+    unsigned char hour;  /*!< Часы (0x00 - 0x12 или 0x24).*/
+    unsigned char am_pm; /*!< Переключатель до-после полудня. 0 - AM; 1 - PM.*/
+    unsigned char date;  /*!< Дата (0x01 - 0x31).
+                              
+                              Значение зависит от месяца и года. Для февраля
+                              нулевого года максимум - 0x29.*/
+    unsigned char month; /*!< Месяц (0x01 - 0x12).*/
+    unsigned char year;  /*!< Год (0x00 - 0x03).
+    
+                              Високосный год 0x00.*/
+    pcf8583_dow_t dow;   /*!< День недели.*/
 } pcf8583_time_t;
 
 

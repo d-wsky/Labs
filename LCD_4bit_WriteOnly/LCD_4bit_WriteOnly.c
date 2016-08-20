@@ -21,11 +21,11 @@
 
 int main(void)
 {
-	hd44780_init(Phys2Row5x8, OutNorm, CursorMode2Blink);
-	hd44780_clear();
-	hd44780_gotoxy(2, 1);
-	hd44780_putc('R');
-	while (1) {
-	};
-	return 0;
+    hd44780_init(Phys2Row5x8, OutNorm, CursorMode2Blink);
+    hd44780_clear();
+    hd44780_gotoxy(2, 1);
+    hd44780_putc('R');
+    while (1) {
+    };
+    return 0;
 }

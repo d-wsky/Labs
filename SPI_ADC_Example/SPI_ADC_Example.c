@@ -23,35 +23,35 @@
 #include "mcp3204.h"
 
 int main(void) {
-	/* 0. Подготовка используемых средств к работе.*/
-	
-	/* На эти ножки выводится результат преобразования.*/
-	gpio_pin_mode_out(GPIO_PORTC, GPIO_PIN_ALL);
-	gpio_pin_mode_out(GPIO_PORTD, GPIO_PIN_ALL);
-	
-	/* Подготовка модуля интерфейса SPI к работе.*/
-	SpiConfig_t spi_config = {
-		.clk    = SPI_SCK_F_DIV_128,
-		.master = SPI_MASTER_MODE,
-		.mode   = SPI_MODE_00,
-		.order  = SPI_DATA_ORDER_MSB_FIRST
-	};
-	
-	spi_init(&spi_config);
-	spi_enable();
-	
-	/* Инициализация микросхемы АЦП.*/
-	mcp3204_init();
-	
-	while(1) {
-		/* 1. Чтение данных.*/
-		uint16_t adc_result = mcp3204_read(MCP3204_CHANNEL_CH1);
+    /* 0. Подготовка используемых средств к работе.*/
+    
+    /* На эти ножки выводится результат преобразования.*/
+    gpio_pin_mode_out(GPIO_PORTC, GPIO_PIN_ALL);
+    gpio_pin_mode_out(GPIO_PORTD, GPIO_PIN_ALL);
+    
+    /* Подготовка модуля интерфейса SPI к работе.*/
+    SpiConfig_t spi_config = {
+        .clk    = SPI_SCK_F_DIV_128,
+        .master = SPI_MASTER_MODE,
+        .mode   = SPI_MODE_00,
+        .order  = SPI_DATA_ORDER_MSB_FIRST
+    };
+    
+    spi_init(&spi_config);
+    spi_enable();
+    
+    /* Инициализация микросхемы АЦП.*/
+    mcp3204_init();
+    
+    while(1) {
+        /* 1. Чтение данных.*/
+        uint16_t adc_result = mcp3204_read(MCP3204_CHANNEL_CH1);
 
-		/* 2. Отображение данных.*/
-		gpio_port_assign(GPIO_PORTC, adc_result);
-		gpio_port_assign(GPIO_PORTD, adc_result >> 8);
-		
-		/* 3. Пауза.*/
-		_delay_ms(100);
-	}
+        /* 2. Отображение данных.*/
+        gpio_port_assign(GPIO_PORTC, adc_result);
+        gpio_port_assign(GPIO_PORTD, adc_result >> 8);
+        
+        /* 3. Пауза.*/
+        _delay_ms(100);
+    }
 }

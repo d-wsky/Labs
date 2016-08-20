@@ -18,29 +18,29 @@
 
 int main(void) {
 
-	unsigned char dat=0;
-	DDRC = 0xFF;
-	
-	usart0_init(UBRR_FROM_BAUD(UART0_BAUD));
-	/* Привязываем основной поток вывода к u0stdout */
-	stdout = &uart0_iostream;
-	stdin = &uart0_iostream;
-	/* Инициализация и очистка дисплея */
-	hd44780_init(Phys2Row5x8, OutNorm, CursorMode1Blink);
-	hd44780_clear();
-	
-	sei();
-	
-	/* Пример вывода текста с использованием функции printf */
-	printf("\033[2JSimple example of using USART-RS232 bridge.\r\n\r\n");
-	printf("All that you type appears on LCD.\r\n");
-	printf("USART echoes all typed symbols back so they appears here...\r\n\r\n");
-	
-	while(1) {
-    	/* Проверяем приемный буфер */
-		dat = getchar();
-		/* Когда поступит новый символ, выводим его на ЖКИ и в USART */
-		hd44780_putc(dat);
-		putchar(dat);
-	};
+    unsigned char dat=0;
+    DDRC = 0xFF;
+    
+    usart0_init(UBRR_FROM_BAUD(UART0_BAUD));
+    /* Привязываем основной поток вывода к u0stdout */
+    stdout = &uart0_iostream;
+    stdin = &uart0_iostream;
+    /* Инициализация и очистка дисплея */
+    hd44780_init(Phys2Row5x8, OutNorm, CursorMode1Blink);
+    hd44780_clear();
+    
+    sei();
+    
+    /* Пример вывода текста с использованием функции printf */
+    printf("\033[2JSimple example of using USART-RS232 bridge.\r\n\r\n");
+    printf("All that you type appears on LCD.\r\n");
+    printf("USART echoes all typed symbols back so they appears here...\r\n\r\n");
+    
+    while(1) {
+        /* Проверяем приемный буфер */
+        dat = getchar();
+        /* Когда поступит новый символ, выводим его на ЖКИ и в USART */
+        hd44780_putc(dat);
+        putchar(dat);
+    };
 }

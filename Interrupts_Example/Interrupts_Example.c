@@ -44,25 +44,25 @@
 #include "interrupts.h"
 
 void irq0_handler(void) {
-	GpioLevel_t level = gpioPinGet(GPIO_PORTD, GPIO_PIN0);
-	if (level == GPIO_LEVEL_HIGH) {
-		gpioPinSet(GPIO_PORTA, GPIO_PIN0);
-	}
-	else {
-		gpioPinClear(GPIO_PORTA, GPIO_PIN0);
-	}
+    GpioLevel_t level = gpioPinGet(GPIO_PORTD, GPIO_PIN0);
+    if (level == GPIO_LEVEL_HIGH) {
+        gpioPinSet(GPIO_PORTA, GPIO_PIN0);
+    }
+    else {
+        gpioPinClear(GPIO_PORTA, GPIO_PIN0);
+    }
 }
 
 void setup() {
-	gpioPinModeSet(GPIO_PORTA, GPIO_PIN0, GPIO_MODE_OUT);
-	gpioPinModeSet(GPIO_PORTD, GPIO_PIN0, GPIO_MODE_IN);
-	interruptAttach(IRQ_PIN_0, irq0_handler, IRQ_MODE_CHANGE);
+    gpioPinModeSet(GPIO_PORTA, GPIO_PIN0, GPIO_MODE_OUT);
+    gpioPinModeSet(GPIO_PORTD, GPIO_PIN0, GPIO_MODE_IN);
+    interruptAttach(IRQ_PIN_0, irq0_handler, IRQ_MODE_CHANGE);
 }
 
 void loop() {
-	volatile int a = 0x1234, b = 0x5678, c;
-	c = a + b;
-	// следующая строка нужна, чтобы избавиться от ошибки
-	// variable 'c' set but not used
-	(void)c;
+    volatile int a = 0x1234, b = 0x5678, c;
+    c = a + b;
+    // следующая строка нужна, чтобы избавиться от ошибки
+    // variable 'c' set but not used
+    (void)c;
 }

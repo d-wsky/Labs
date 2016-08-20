@@ -17,17 +17,17 @@
 /*! \brief Этот тип данных используется для информирования
 внешнего кода об успешности операции.*/
 typedef enum {
-	I2C_STATUS_OK,    /*!< Успешное исполнение функции.*/
-	I2C_STATUS_ERROR  /*!< Исполнение функции было неуспешно.*/
+    I2C_STATUS_OK,    /*!< Успешное исполнение функции.*/
+    I2C_STATUS_ERROR  /*!< Исполнение функции было неуспешно.*/
 } i2c_status_t;
 
 /*! \brief С помощью этого кода можно выбрать какой уровень будет
 у сигнала подтверждения.*/
 typedef enum {
-	I2C_ACK, /*!< Установка бита подтверждения (\a ACK)
-	              после завершения приема.*/
-	I2C_NACK /*!< Отсутствие бита подтверждение (\a NACK)
-	              после завершения приема.*/
+    I2C_ACK, /*!< Установка бита подтверждения (\a ACK)
+                  после завершения приема.*/
+    I2C_NACK /*!< Отсутствие бита подтверждение (\a NACK)
+                  после завершения приема.*/
 } i2c_ack_t;
 
 /*! \brief Удобный макрос для выполнения одного действия внутри
@@ -40,11 +40,11 @@ typedef enum {
 
 \code
 i2c_status_t write_func(uint8_t some_addr, uint8_t some_data) {
-	I2C_TRY_ACTION(i2c_start());
-	I2C_TRY_ACTION(i2c_write_addr(some_addr));
-	I2C_TRY_ACTION(i2c_write_byte(some_data));
-	I2C_TRY_ACTION(i2c_stop());
-	return I2C_STATUS_OK;
+    I2C_TRY_ACTION(i2c_start());
+    I2C_TRY_ACTION(i2c_write_addr(some_addr));
+    I2C_TRY_ACTION(i2c_write_byte(some_data));
+    I2C_TRY_ACTION(i2c_stop());
+    return I2C_STATUS_OK;
 }
 \endcode
 */

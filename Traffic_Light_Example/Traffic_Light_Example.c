@@ -45,121 +45,121 @@
 
 /* Вспомогательная функция задержки, кратной секундам */
 void delay_s(uint8_t t) {
-	for (uint8_t i = 0; i < t; i++)
-		_delay_ms(1000);	
+    for (uint8_t i = 0; i < t; i++)
+        _delay_ms(1000);    
 }
 
 /* Состояние запрещения движения в течение state_delay секунд.
 Горит только красный индикатор. */
 void Stop(uint8_t state_delay) {
-	RED_LIGHT_ON;
-	YELLOW_LIGHT_OFF;
-	GREEN_LIGHT_OFF;
-	delay_s(state_delay);
+    RED_LIGHT_ON;
+    YELLOW_LIGHT_OFF;
+    GREEN_LIGHT_OFF;
+    delay_s(state_delay);
 }
 
 /* Состояние подготовки к движению в течение 3 секунд.
 Горит красный и желтый индикатор. */
 void ReadyToMove() {
-	RED_LIGHT_ON;
-	YELLOW_LIGHT_ON;
-	GREEN_LIGHT_OFF;
-	delay_s(3);
+    RED_LIGHT_ON;
+    YELLOW_LIGHT_ON;
+    GREEN_LIGHT_OFF;
+    delay_s(3);
 }
 
 /* Состояние движение разрешено в течение state_delay секунд.
 Горит только зеленый индикатор */
 void Move(uint8_t state_delay) {
-	RED_LIGHT_OFF;
-	YELLOW_LIGHT_OFF;
-	GREEN_LIGHT_ON;
-	delay_s(state_delay);
+    RED_LIGHT_OFF;
+    YELLOW_LIGHT_OFF;
+    GREEN_LIGHT_ON;
+    delay_s(state_delay);
 }
 
 /* Состояние подготовки к остановке. В течение 3 секунд
 зеленый индикатор мигает с частотой 1 Гц. */
 void EndMovement() {
-	RED_LIGHT_OFF;
-	YELLOW_LIGHT_OFF;
-	/* мигание */
-	for (uint8_t i = 0; i < 6; i++) {
-		if (i & 1) {
-			GREEN_LIGHT_OFF;
-		}
-		else {
-			GREEN_LIGHT_ON;
-		}
-		_delay_ms(500);
-	}
+    RED_LIGHT_OFF;
+    YELLOW_LIGHT_OFF;
+    /* мигание */
+    for (uint8_t i = 0; i < 6; i++) {
+        if (i & 1) {
+            GREEN_LIGHT_OFF;
+        }
+        else {
+            GREEN_LIGHT_ON;
+        }
+        _delay_ms(500);
+    }
 }
 
 /* Состояние завершения движения в течение 3 секунд.
 Горит только желтый индикатор. */
 void ReadyToStop() {
-	RED_LIGHT_OFF;
-	YELLOW_LIGHT_ON;
-	GREEN_LIGHT_OFF;
-	delay_s(3);
+    RED_LIGHT_OFF;
+    YELLOW_LIGHT_ON;
+    GREEN_LIGHT_OFF;
+    delay_s(3);
 }
 
 /* Состояние отключения регулировки. Один раз
 моргает желтым индикатором (ON->OFF), чтобы не блокироваться.*/
 void NoTrafficControl() {
-	RED_LIGHT_OFF;
-	YELLOW_LIGHT_ON;
-	GREEN_LIGHT_OFF;
-	delay_s(1);
-	YELLOW_LIGHT_OFF;
-	delay_s(1);
+    RED_LIGHT_OFF;
+    YELLOW_LIGHT_ON;
+    GREEN_LIGHT_OFF;
+    delay_s(1);
+    YELLOW_LIGHT_OFF;
+    delay_s(1);
 }
 
 int main(void)
 {
-	/* инициализация контроллера */
-	DDRA = 0x07;
-	/* инициализация конечного автомата */
-	uint8_t current_state = STATE_STOP;
-	/* цикл работы конечного автомата */
+    /* инициализация контроллера */
+    DDRA = 0x07;
+    /* инициализация конечного автомата */
+    uint8_t current_state = STATE_STOP;
+    /* цикл работы конечного автомата */
     while(1) {
         switch (current_state) {
-			case STATE_STOP:
-				/* действие в этом состоянии */
-				Stop(STOP_DELAY);
-				/* выбор следующего состояния */
-				if (PINB & 1) {
-					current_state = STATE_NO_TRAFFIC_CONTROL;
-				}
-				else {
-					current_state = STATE_READY_TO_MOVE;
-				}
-				break;
-			case STATE_READY_TO_MOVE:
-				/* код следующего состояния... */
-				ReadyToMove();
-				current_state = STATE_MOVE;
-				break;
-			case STATE_MOVE:
-				/* код следующего состояния... */
-				Move(MOVE_DELAY);
-				current_state = STATE_END_MOVEMENT;
-				break;
-			case STATE_END_MOVEMENT:
-				/* код следующего состояния... */
-				EndMovement();
-				current_state = STATE_READY_TO_STOP;
-				break;
-			case STATE_READY_TO_STOP:
-				/* код следующего состояния... */
-				ReadyToStop();
-				current_state = STATE_STOP;
-				break;
-			case STATE_NO_TRAFFIC_CONTROL:
-				/* код следующего состояния... */
-				NoTrafficControl();
-				if (!(PINB & 1)) {
-					current_state = STATE_STOP;
-				}
-				break;
-		}
+            case STATE_STOP:
+                /* действие в этом состоянии */
+                Stop(STOP_DELAY);
+                /* выбор следующего состояния */
+                if (PINB & 1) {
+                    current_state = STATE_NO_TRAFFIC_CONTROL;
+                }
+                else {
+                    current_state = STATE_READY_TO_MOVE;
+                }
+                break;
+            case STATE_READY_TO_MOVE:
+                /* код следующего состояния... */
+                ReadyToMove();
+                current_state = STATE_MOVE;
+                break;
+            case STATE_MOVE:
+                /* код следующего состояния... */
+                Move(MOVE_DELAY);
+                current_state = STATE_END_MOVEMENT;
+                break;
+            case STATE_END_MOVEMENT:
+                /* код следующего состояния... */
+                EndMovement();
+                current_state = STATE_READY_TO_STOP;
+                break;
+            case STATE_READY_TO_STOP:
+                /* код следующего состояния... */
+                ReadyToStop();
+                current_state = STATE_STOP;
+                break;
+            case STATE_NO_TRAFFIC_CONTROL:
+                /* код следующего состояния... */
+                NoTrafficControl();
+                if (!(PINB & 1)) {
+                    current_state = STATE_STOP;
+                }
+                break;
+        }
     }
 }

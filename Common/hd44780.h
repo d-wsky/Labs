@@ -66,10 +66,10 @@
 #endif
 
 typedef enum {
-	Phys1Row5x8  = HD44780_PHYSICAL_CMD | HD44780_BUS_WIDTH | HD44780_1ROW | HD44780_5x8MATRIX  | HD44780_RUS_FONT_TABLE,
-	Phys1Row5x10 = HD44780_PHYSICAL_CMD | HD44780_BUS_WIDTH | HD44780_1ROW | HD44780_5x10MATRIX | HD44780_RUS_FONT_TABLE,
-	Phys2Row5x8  = HD44780_PHYSICAL_CMD | HD44780_BUS_WIDTH | HD44780_2ROW | HD44780_5x8MATRIX  | HD44780_RUS_FONT_TABLE,
-	Phys2Row5x10 = HD44780_PHYSICAL_CMD | HD44780_BUS_WIDTH | HD44780_2ROW | HD44780_5x10MATRIX | HD44780_RUS_FONT_TABLE,
+    Phys1Row5x8  = HD44780_PHYSICAL_CMD | HD44780_BUS_WIDTH | HD44780_1ROW | HD44780_5x8MATRIX  | HD44780_RUS_FONT_TABLE,
+    Phys1Row5x10 = HD44780_PHYSICAL_CMD | HD44780_BUS_WIDTH | HD44780_1ROW | HD44780_5x10MATRIX | HD44780_RUS_FONT_TABLE,
+    Phys2Row5x8  = HD44780_PHYSICAL_CMD | HD44780_BUS_WIDTH | HD44780_2ROW | HD44780_5x8MATRIX  | HD44780_RUS_FONT_TABLE,
+    Phys2Row5x10 = HD44780_PHYSICAL_CMD | HD44780_BUS_WIDTH | HD44780_2ROW | HD44780_5x10MATRIX | HD44780_RUS_FONT_TABLE,
 } Hd44780PhysicalParams_t;
 
 /* направление вывода */
@@ -77,8 +77,8 @@ typedef enum {
 #define HD44780_OUT_LEFT_TO_RIGHT   (1 << 1)
 #define HD44780_OUT_RIGHT_TO_LEFT   (0 << 1)
 typedef enum {
-	OutNorm   = HD44780_OUT_CMD | HD44780_OUT_LEFT_TO_RIGHT,
-	OutArabic = HD44780_OUT_CMD | HD44780_OUT_RIGHT_TO_LEFT
+    OutNorm   = HD44780_OUT_CMD | HD44780_OUT_LEFT_TO_RIGHT,
+    OutArabic = HD44780_OUT_CMD | HD44780_OUT_RIGHT_TO_LEFT
 } Hd44780OutParams_t;
 
 /* варианты отображения курсора */
@@ -91,12 +91,12 @@ typedef enum {
 #define HD44780_BLINK_OFF           (0 << 0)
 
 typedef enum {
-	DispOff          = HD44780_CURSOR_MODE_CMD | HD44780_DISPLAY_OFF,
-	CursorOff        = HD44780_CURSOR_MODE_CMD | HD44780_DISPLAY_ON | HD44780_CURSOR_OFF | HD44780_BLINK_OFF,
-	CursorMode1      = HD44780_CURSOR_MODE_CMD | HD44780_DISPLAY_ON | HD44780_CURSOR_ON  | HD44780_BLINK_OFF,
-	CursorMode1Blink = HD44780_CURSOR_MODE_CMD | HD44780_DISPLAY_ON | HD44780_CURSOR_ON  | HD44780_BLINK_ON,
-	CursorMode2      = HD44780_CURSOR_MODE_CMD | HD44780_DISPLAY_ON | HD44780_CURSOR_OFF | HD44780_BLINK_OFF,
-	CursorMode2Blink = HD44780_CURSOR_MODE_CMD | HD44780_DISPLAY_ON | HD44780_CURSOR_OFF | HD44780_BLINK_ON
+    DispOff          = HD44780_CURSOR_MODE_CMD | HD44780_DISPLAY_OFF,
+    CursorOff        = HD44780_CURSOR_MODE_CMD | HD44780_DISPLAY_ON | HD44780_CURSOR_OFF | HD44780_BLINK_OFF,
+    CursorMode1      = HD44780_CURSOR_MODE_CMD | HD44780_DISPLAY_ON | HD44780_CURSOR_ON  | HD44780_BLINK_OFF,
+    CursorMode1Blink = HD44780_CURSOR_MODE_CMD | HD44780_DISPLAY_ON | HD44780_CURSOR_ON  | HD44780_BLINK_ON,
+    CursorMode2      = HD44780_CURSOR_MODE_CMD | HD44780_DISPLAY_ON | HD44780_CURSOR_OFF | HD44780_BLINK_OFF,
+    CursorMode2Blink = HD44780_CURSOR_MODE_CMD | HD44780_DISPLAY_ON | HD44780_CURSOR_OFF | HD44780_BLINK_ON
 } Hd44780CursorMode_t;
 
 #define HD44780_GOTO_CMD            (1 << 7)
@@ -105,7 +105,7 @@ typedef enum {
 char c - сам байт
 char rs - переменная, указывающая что передается:
      rs = 0 - команда (устанавливается линия RS)
-	 rs = 1 - данные (сбрасывается линия RS) */
+     rs = 1 - данные (сбрасывается линия RS) */
 void hd44780_putbyte(char c, char rs);
 
 /* функция очистки дисплея и возврата
@@ -126,10 +126,10 @@ void hd44780_home();
 void hd44780_init(Hd44780PhysicalParams_t ph,
                   Hd44780OutParams_t out,
                   Hd44780CursorMode_t cur);
-			  
+              
 /* функция вывода отдельного байта на текущей позиции */
 static inline void hd44780_putc(char x) {
-	hd44780_putbyte(x, HD44780_DATA);
+    hd44780_putbyte(x, HD44780_DATA);
 }
 
 /* функция вывода стандартной строки на текущей позиции */

@@ -15,37 +15,37 @@
 
 /*! \brief Тип данных, используемый для определения режима ввода-вывода.*/
 typedef enum {
-	GPIO_MODE_IN = 0,   /*!< Режим ввода данных в микроконтроллер.*/
-	GPIO_MODE_OUT = 1,  /*!< Режим вывода данных из микроконтроллера.*/
+    GPIO_MODE_IN = 0,   /*!< Режим ввода данных в микроконтроллер.*/
+    GPIO_MODE_OUT = 1,  /*!< Режим вывода данных из микроконтроллера.*/
 } GpioMode_t;
 
 /*! \brief Тип данных, используемый для выбора тактовой скорости соединения.*/
 typedef enum {
-	GPIO_LEVEL_LOW = 0,  /*!< Низкий уровень напряжения на ножке.*/
-	GPIO_LEVEL_HIGH = 1, /*!< Высокий уровень напряжения на ножке.*/
+    GPIO_LEVEL_LOW = 0,  /*!< Низкий уровень напряжения на ножке.*/
+    GPIO_LEVEL_HIGH = 1, /*!< Высокий уровень напряжения на ножке.*/
 } GpioLevel_t;
 
 /*! \brief Тип данных, используемый для выбора режима тактирования данных.*/
 typedef enum {
-	GPIO_PORTA = 0, /*!< Порт A.*/
-	GPIO_PORTB,     /*!< Порт B.*/
-	GPIO_PORTC,     /*!< Порт C.*/
-	GPIO_PORTD,     /*!< Порт D.*/
-	GPIO_PORTE,     /*!< Порт E.*/
-	GPIO_PORTF,     /*!< Порт F.*/
-	GPIO_PORTG,     /*!< Порт G.*/
+    GPIO_PORTA = 0, /*!< Порт A.*/
+    GPIO_PORTB,     /*!< Порт B.*/
+    GPIO_PORTC,     /*!< Порт C.*/
+    GPIO_PORTD,     /*!< Порт D.*/
+    GPIO_PORTE,     /*!< Порт E.*/
+    GPIO_PORTF,     /*!< Порт F.*/
+    GPIO_PORTG,     /*!< Порт G.*/
 } GpioPort_t;
 
 typedef enum {
-	GPIO_PIN0 = _BV(0),       /*!< Ножка 0 (младший бит порта).*/
-	GPIO_PIN1 = _BV(1),       /*!< Ножка 1.*/
-	GPIO_PIN2 = _BV(2),       /*!< Ножка 2.*/
-	GPIO_PIN3 = _BV(3),       /*!< Ножка 3.*/
-	GPIO_PIN4 = _BV(4),       /*!< Ножка 4.*/
-	GPIO_PIN5 = _BV(5),       /*!< Ножка 5.*/
-	GPIO_PIN6 = _BV(6),       /*!< Ножка 6.*/
-	GPIO_PIN7 = _BV(7),       /*!< Ножка 7 (старший бит порта).*/
-	GPIO_PIN_ALL = UINT8_MAX, /*!< Все ножки порта разом.*/
+    GPIO_PIN0 = _BV(0),       /*!< Ножка 0 (младший бит порта).*/
+    GPIO_PIN1 = _BV(1),       /*!< Ножка 1.*/
+    GPIO_PIN2 = _BV(2),       /*!< Ножка 2.*/
+    GPIO_PIN3 = _BV(3),       /*!< Ножка 3.*/
+    GPIO_PIN4 = _BV(4),       /*!< Ножка 4.*/
+    GPIO_PIN5 = _BV(5),       /*!< Ножка 5.*/
+    GPIO_PIN6 = _BV(6),       /*!< Ножка 6.*/
+    GPIO_PIN7 = _BV(7),       /*!< Ножка 7 (старший бит порта).*/
+    GPIO_PIN_ALL = UINT8_MAX, /*!< Все ножки порта разом.*/
 } GpioPin_t;
 
 /*! \brief Функция установки высокого уровня напряжения на одной
@@ -298,52 +298,52 @@ static volatile uint8_t * dirs[8] =
 
 static inline void gpio_pin_set(GpioPort_t p, uint8_t pins_mask)
 {
-	// todo вход в критическую секцию здесь и ниже
-	*ports[p] |= pins_mask;
-	// todo выход из критической секции здесь и ниже
+    // todo вход в критическую секцию здесь и ниже
+    *ports[p] |= pins_mask;
+    // todo выход из критической секции здесь и ниже
 }
 static inline void gpio_pin_clear(GpioPort_t p, uint8_t pins_mask)
 {
-	*ports[p] &= ~pins_mask;
+    *ports[p] &= ~pins_mask;
 }
 
 static inline void gpio_pin_toggle(GpioPort_t p, uint8_t pins_mask)
 {
-	*ports[p] ^= pins_mask;
+    *ports[p] ^= pins_mask;
 }
 
 static inline void gpio_port_assign(GpioPort_t p, uint8_t pins_value)
 {
-	*ports[p] = pins_value;
+    *ports[p] = pins_value;
 }
 
 static inline GpioLevel_t gpio_pin_get(GpioPort_t p, GpioPin_t pin_num)
 {
-	return (GpioLevel_t)(!!(*pins[p] & _BV(pin_num)));
+    return (GpioLevel_t)(!!(*pins[p] & _BV(pin_num)));
 }
 
 static inline void gpio_pin_mode_in(GpioPort_t p, uint8_t pins_mask)
 {
-	*dirs[p] &= ~pins_mask;
+    *dirs[p] &= ~pins_mask;
 }
 
 static inline void gpio_pin_mode_out(GpioPort_t p, uint8_t pins_mask)
 {
-	*dirs[p] |= pins_mask;
+    *dirs[p] |= pins_mask;
 }
 
 static inline GpioMode_t gpio_pin_mode_get(GpioPort_t p, GpioPin_t pin_num)
 {
-	return (GpioMode_t)(!!(*dirs[p] & pin_num));
+    return (GpioMode_t)(!!(*dirs[p] & pin_num));
 }
 
 static inline void gpio_pin_pull_up_enable(GpioPort_t p, uint8_t pins_mask)
 {
-	*ports[p] |= pins_mask;
+    *ports[p] |= pins_mask;
 }
 static inline void gpio_pin_pull_up_disable(GpioPort_t p, uint8_t pins_mask)
 {
-	*ports[p] &= ~pins_mask;
+    *ports[p] &= ~pins_mask;
 }
 
 #endif /* GPIO_H_ */

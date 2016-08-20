@@ -16,18 +16,18 @@
 /* инициализация портов,
 подключенных к жки */
 void init_port() {
-	PORTC=0x00;
-	DDRC=0xFF;
+    PORTC=0x00;
+    DDRC=0xFF;
 }
 
 int main(void)
 {
-	init_port();
-	lcd_init();
-	lcd_clear();
-	lcd_gotoxy(2, 1);
-	
-	lcd_puts("Hello world!");
+    init_port();
+    lcd_init();
+    lcd_clear();
+    lcd_gotoxy(2, 1);
+    
+    lcd_puts("Hello world!");
     while(1)
     {
 
