@@ -43,12 +43,14 @@
 #include "structure.h"
 #include "gpio.h"
 #include "delay.h"
- 
+
+const Gpio_t gpio_pin = {.port = GPIO_PORTA, .pin = GPIO_PIN0};
+
 void setup() {
-    gpioPinModeSet(GPIO_PORTA, GPIO_PIN0, GPIO_MODE_OUT);
+    gpioPinModeSet(gpio_pin, GPIO_MODE_OUT);
 }
 
 void loop() {
-    gpioPinToggle(GPIO_PORTA, GPIO_PIN0);
+    gpioPinToggle(gpio_pin);
     delayMs(1000);
 }

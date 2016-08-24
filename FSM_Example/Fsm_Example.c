@@ -128,18 +128,18 @@ void a_moveLeft(void * p_data) {
 }
 
 void updateLeds(const LedPosition_t * led) {
-    gpioPinClear(GPIO_PORTA, GPIO_PIN_ALL);
-    gpioPinClear(GPIO_PORTB, GPIO_PIN_ALL);
-    gpioPinClear(GPIO_PORTC, GPIO_PIN_ALL);
-    gpioPinClear(GPIO_PORTD, GPIO_PIN_ALL);
-    gpioPinSet(led->port, led->pin);
+    gpioPinClear((Gpio_t){GPIO_PORTA, GPIO_PIN_ALL});
+    gpioPinClear((Gpio_t){GPIO_PORTB, GPIO_PIN_ALL});
+    gpioPinClear((Gpio_t){GPIO_PORTC, GPIO_PIN_ALL});
+    gpioPinClear((Gpio_t){GPIO_PORTD, GPIO_PIN_ALL});
+    gpioPinSet((Gpio_t){led->port, led->pin});
 }
 
 void setup(void) {
-    gpioPinModeSet(GPIO_PORTA, GPIO_PIN_ALL, GPIO_MODE_OUT);
-    gpioPinModeSet(GPIO_PORTB, GPIO_PIN_ALL, GPIO_MODE_OUT);
-    gpioPinModeSet(GPIO_PORTC, GPIO_PIN_ALL, GPIO_MODE_OUT);
-    gpioPinModeSet(GPIO_PORTD, GPIO_PIN_ALL, GPIO_MODE_OUT);
+    gpioPinModeSet((Gpio_t){GPIO_PORTA, GPIO_PIN_ALL}, GPIO_MODE_OUT);
+    gpioPinModeSet((Gpio_t){GPIO_PORTB, GPIO_PIN_ALL}, GPIO_MODE_OUT);
+    gpioPinModeSet((Gpio_t){GPIO_PORTC, GPIO_PIN_ALL}, GPIO_MODE_OUT);
+    gpioPinModeSet((Gpio_t){GPIO_PORTD, GPIO_PIN_ALL}, GPIO_MODE_OUT);
     fsmInit(&fsm, fsmTable, ARRAY_SIZE(fsmTable), S_MOVING_DOWN);
 }
 

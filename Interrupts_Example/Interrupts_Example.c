@@ -43,19 +43,23 @@
 #include "gpio.h"
 #include "interrupts.h"
 
+const Gpio_t out_pin = {.port = GPIO_PORTA, .pin = GPIO_PIN0};
+const Gpio_t in_pin  = {.port = GPIO_PORTD, .pin = GPIO_PIN0};
+
 void irq0_handler(void) {
-    GpioLevel_t level = gpioPinGet(GPIO_PORTD, GPIO_PIN0);
+    GpioLevel_t level = gpioPinGet(in_pin);
+    
     if (level == GPIO_LEVEL_HIGH) {
-        gpioPinSet(GPIO_PORTA, GPIO_PIN0);
+        gpioPinSet(out_pin);
     }
     else {
-        gpioPinClear(GPIO_PORTA, GPIO_PIN0);
+        gpioPinClear(out_pin);
     }
 }
 
 void setup() {
-    gpioPinModeSet(GPIO_PORTA, GPIO_PIN0, GPIO_MODE_OUT);
-    gpioPinModeSet(GPIO_PORTD, GPIO_PIN0, GPIO_MODE_IN);
+    gpioPinModeSet(out_pin, GPIO_MODE_OUT);
+    gpioPinModeSet(in_pin, GPIO_MODE_IN);
     interruptAttach(IRQ_PIN_0, irq0_handler, IRQ_MODE_CHANGE);
 }
 
