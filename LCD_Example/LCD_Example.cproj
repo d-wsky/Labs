@@ -1,10 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="14.0">
   <PropertyGroup>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectVersion>7.0</ProjectVersion>
     <ToolchainName>com.Atmel.AVRGCC8.C</ToolchainName>
-    <ProjectGuid>{b9e88175-0a99-45c8-be49-e07bca08b829}</ProjectGuid>
+    <ProjectGuid>{8796c546-4e07-4395-9eba-94a587fea080}</ProjectGuid>
     <avrdevice>ATmega128</avrdevice>
     <avrdeviceseries>none</avrdeviceseries>
     <OutputType>Executable</OutputType>
@@ -12,9 +12,9 @@
     <OutputFileName>$(MSBuildProjectName)</OutputFileName>
     <OutputFileExtension>.elf</OutputFileExtension>
     <OutputDirectory>$(MSBuildProjectDirectory)\$(Configuration)</OutputDirectory>
-    <AssemblyName>LCD_Lib_Using_Example</AssemblyName>
-    <Name>LCD_Lib_Using_Example</Name>
-    <RootNamespace>LCD_Lib_Using_Example</RootNamespace>
+    <AssemblyName>LCD_Example</AssemblyName>
+    <Name>LCD_Example</Name>
+    <RootNamespace>LCD_Example</RootNamespace>
     <ToolchainFlavour>Native</ToolchainFlavour>
     <KeepTimersRunning>true</KeepTimersRunning>
     <OverrideVtor>false</OverrideVtor>
@@ -22,22 +22,13 @@
     <ProgFlashFromRam>true</ProgFlashFromRam>
     <RamSnippetAddress>0x20000000</RamSnippetAddress>
     <UncachedRange />
+    <preserveEEPROM>true</preserveEEPROM>
     <OverrideVtorValue>exception_table</OverrideVtorValue>
     <BootSegment>2</BootSegment>
     <eraseonlaunchrule>0</eraseonlaunchrule>
-    <AsfFrameworkConfig>
-      <framework-data xmlns="">
-        <options />
-        <configurations />
-        <files />
-        <documentation help="" />
-        <offline-documentation help="" />
-        <dependencies>
-          <content-extension eid="atmel.asf" uuidref="Atmel.ASF" version="3.17.0" />
-        </dependencies>
-      </framework-data>
-    </AsfFrameworkConfig>
     <avrtool>com.atmel.avrdbg.tool.simulator</avrtool>
+    <avrtoolserialnumber />
+    <avrdeviceexpectedsignature>0x1E9702</avrdeviceexpectedsignature>
     <com_atmel_avrdbg_tool_simulator>
       <ToolOptions xmlns="">
         <InterfaceProperties>
@@ -48,7 +39,6 @@
       </ToolNumber>
       <ToolName xmlns="">Simulator</ToolName>
     </com_atmel_avrdbg_tool_simulator>
-    <preserveEEPROM>true</preserveEEPROM>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <ToolchainSettings>
@@ -79,14 +69,8 @@
   <avrgcc.linker.libraries.Libraries>
     <ListValues>
       <Value>libm</Value>
-      <Value>liblcd.a</Value>
     </ListValues>
   </avrgcc.linker.libraries.Libraries>
-  <avrgcc.linker.libraries.LibrarySearchPaths>
-    <ListValues>
-      <Value>F:\My Portable Documents\Programing\AVRStudio Projects\Labs\LCD_Lib_Using_Example\Libs</Value>
-    </ListValues>
-  </avrgcc.linker.libraries.LibrarySearchPaths>
   <avrgcc.assembler.general.IncludePaths>
     <ListValues>
       <Value>%24(PackRepoDir)\atmel\ATmega_DFP\1.0.106\include</Value>
@@ -115,6 +99,8 @@
   <avrgcc.compiler.directories.IncludePaths>
     <ListValues>
       <Value>%24(PackRepoDir)\atmel\ATmega_DFP\1.0.106\include</Value>
+      <Value>../../LabLib</Value>
+      <Value>../../LiquidCrystalLib</Value>
     </ListValues>
   </avrgcc.compiler.directories.IncludePaths>
   <avrgcc.compiler.optimization.level>Optimize (-O1)</avrgcc.compiler.optimization.level>
@@ -125,14 +111,8 @@
   <avrgcc.linker.libraries.Libraries>
     <ListValues>
       <Value>libm</Value>
-      <Value>liblcd.a</Value>
     </ListValues>
   </avrgcc.linker.libraries.Libraries>
-  <avrgcc.linker.libraries.LibrarySearchPaths>
-    <ListValues>
-      <Value>F:\My Portable Documents\Programing\AVRStudio Projects\Labs\LCD_Lib_Using_Example\Libs</Value>
-    </ListValues>
-  </avrgcc.linker.libraries.LibrarySearchPaths>
   <avrgcc.assembler.general.IncludePaths>
     <ListValues>
       <Value>%24(PackRepoDir)\atmel\ATmega_DFP\1.0.106\include</Value>
@@ -143,15 +123,21 @@
     </ToolchainSettings>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="LCD_Lib_Using_Example.c">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="Libs\lcd.h">
+    <Compile Include="LCD_Example.c">
       <SubType>compile</SubType>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Libs" />
+    <ProjectReference Include="..\LabLib\LabLib.cproj">
+      <Name>LabLib</Name>
+      <Project>{dce6c7e3-ee26-4d79-826b-08594b9ad897}</Project>
+      <Private>True</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\LiquidCrystalLib\LiquidCrystalLib.cproj">
+      <Name>LiquidCrystalLib</Name>
+      <Project>{861cdbbc-6e3b-4700-9e34-5f19c6290455}</Project>
+      <Private>True</Private>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(AVRSTUDIO_EXE_PATH)\\Vs\\Compiler.targets" />
 </Project>

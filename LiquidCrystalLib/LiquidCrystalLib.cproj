@@ -1,77 +1,39 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="14.0">
   <PropertyGroup>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectVersion>7.0</ProjectVersion>
-    <ProjectGuid>{b9c42e9d-509b-4c10-8a69-baf6a0ba1cfe}</ProjectGuid>
+    <ToolchainName>com.Atmel.AVRGCC8.C</ToolchainName>
+    <ProjectGuid>{861cdbbc-6e3b-4700-9e34-5f19c6290455}</ProjectGuid>
     <avrdevice>ATmega128</avrdevice>
     <avrdeviceseries>none</avrdeviceseries>
+    <OutputType>StaticLibrary</OutputType>
+    <Language>C</Language>
+    <OutputFileName>lib$(MSBuildProjectName)</OutputFileName>
+    <OutputFileExtension>.a</OutputFileExtension>
     <OutputDirectory>$(MSBuildProjectDirectory)\$(Configuration)</OutputDirectory>
     <AvrGccProjectExtensions>
     </AvrGccProjectExtensions>
-    <AssemblyName>LCD_4bit_WriteOnly</AssemblyName>
-    <Name>LCD_4bit_WriteOnly</Name>
-    <RootNamespace>LCD_4bit_WriteOnly</RootNamespace>
-    <avrtool>com.atmel.avrdbg.tool.simulator</avrtool>
-    <avrtoolinterface>JTAG</avrtoolinterface>
-    <com_atmel_avrdbg_tool_simulator>
-      <ToolType>com.atmel.avrdbg.tool.simulator</ToolType>
-      <ToolName>Simulator</ToolName>
-      <ToolNumber>
-      </ToolNumber>
-      <Channel>
-        <host>127.0.0.1</host>
-        <port>4534</port>
-        <ssl>False</ssl>
-      </Channel>
-      <ToolOptions>
-        <InterfaceProperties>
-        </InterfaceProperties>
-        <InterfaceName>JTAG</InterfaceName>
-      </ToolOptions>
-    </com_atmel_avrdbg_tool_simulator>
-    <Language>C</Language>
-    <ToolchainName>com.Atmel.AVRGCC8.C</ToolchainName>
+    <AssemblyName>LiquidCrystal</AssemblyName>
+    <Name>LiquidCrystalLib</Name>
+    <RootNamespace>LiquidCrystal</RootNamespace>
     <ToolchainFlavour>Native</ToolchainFlavour>
-    <AsfFrameworkConfig>
-      <framework-data xmlns="">
-        <options />
-        <configurations />
-        <files />
-        <documentation help="" />
-        <offline-documentation help="" />
-        <dependencies>
-          <content-extension eid="atmel.asf" uuidref="Atmel.ASF" version="3.8.1" />
-        </dependencies>
-      </framework-data>
-    </AsfFrameworkConfig>
     <KeepTimersRunning>true</KeepTimersRunning>
     <OverrideVtor>false</OverrideVtor>
     <CacheFlash>true</CacheFlash>
     <ProgFlashFromRam>true</ProgFlashFromRam>
-    <RamSnippetAddress>0x20000000</RamSnippetAddress>
+    <RamSnippetAddress />
     <UncachedRange />
-    <OverrideVtorValue>exception_table</OverrideVtorValue>
+    <preserveEEPROM>true</preserveEEPROM>
+    <OverrideVtorValue />
     <BootSegment>2</BootSegment>
     <eraseonlaunchrule>0</eraseonlaunchrule>
-    <com_atmel_avrdbg_tool_jtagice3plus>
-      <ToolOptions>
-        <InterfaceProperties>
-        </InterfaceProperties>
-        <InterfaceName>JTAG</InterfaceName>
-      </ToolOptions>
-      <ToolType>com.atmel.avrdbg.tool.jtagice3plus</ToolType>
-      <ToolNumber>J30200018989</ToolNumber>
-      <ToolName>JTAGICE3</ToolName>
-    </com_atmel_avrdbg_tool_jtagice3plus>
-    <preserveEEPROM>true</preserveEEPROM>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
-    <OutputFileName>LCD_4bit_WriteOnly</OutputFileName>
-    <OutputFileExtension>.elf</OutputFileExtension>
     <ToolchainSettings>
       <AvrGcc>
   <avrgcc.common.Device>-mmcu=atmega128 -B "%24(PackRepoDir)\atmel\ATmega_DFP\1.0.106\gcc\dev\atmega128"</avrgcc.common.Device>
+  <avrgcc.common.optimization.RelaxBranches>True</avrgcc.common.optimization.RelaxBranches>
   <avrgcc.common.outputfiles.hex>True</avrgcc.common.outputfiles.hex>
   <avrgcc.common.outputfiles.lss>True</avrgcc.common.outputfiles.lss>
   <avrgcc.common.outputfiles.eep>True</avrgcc.common.outputfiles.eep>
@@ -79,6 +41,11 @@
   <avrgcc.common.outputfiles.usersignatures>False</avrgcc.common.outputfiles.usersignatures>
   <avrgcc.compiler.general.ChangeDefaultCharTypeUnsigned>True</avrgcc.compiler.general.ChangeDefaultCharTypeUnsigned>
   <avrgcc.compiler.general.ChangeDefaultBitFieldUnsigned>True</avrgcc.compiler.general.ChangeDefaultBitFieldUnsigned>
+  <avrgcc.compiler.symbols.DefSymbols>
+    <ListValues>
+      <Value>NDEBUG</Value>
+    </ListValues>
+  </avrgcc.compiler.symbols.DefSymbols>
   <avrgcc.compiler.directories.IncludePaths>
     <ListValues>
       <Value>%24(PackRepoDir)\atmel\ATmega_DFP\1.0.106\include</Value>
@@ -102,12 +69,10 @@
     </ToolchainSettings>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
-    <OutputType>Executable</OutputType>
-    <OutputFileName>LCD_4bit_WriteOnly</OutputFileName>
-    <OutputFileExtension>.elf</OutputFileExtension>
     <ToolchainSettings>
       <AvrGcc>
   <avrgcc.common.Device>-mmcu=atmega128 -B "%24(PackRepoDir)\atmel\ATmega_DFP\1.0.106\gcc\dev\atmega128"</avrgcc.common.Device>
+  <avrgcc.common.optimization.RelaxBranches>True</avrgcc.common.optimization.RelaxBranches>
   <avrgcc.common.outputfiles.hex>True</avrgcc.common.outputfiles.hex>
   <avrgcc.common.outputfiles.lss>True</avrgcc.common.outputfiles.lss>
   <avrgcc.common.outputfiles.eep>True</avrgcc.common.outputfiles.eep>
@@ -117,13 +82,13 @@
   <avrgcc.compiler.general.ChangeDefaultBitFieldUnsigned>True</avrgcc.compiler.general.ChangeDefaultBitFieldUnsigned>
   <avrgcc.compiler.symbols.DefSymbols>
     <ListValues>
-      <Value>F_CPU=10000000UL</Value>
+      <Value>DEBUG</Value>
     </ListValues>
   </avrgcc.compiler.symbols.DefSymbols>
   <avrgcc.compiler.directories.IncludePaths>
     <ListValues>
-      <Value>../../Common</Value>
       <Value>%24(PackRepoDir)\atmel\ATmega_DFP\1.0.106\include</Value>
+      <Value>../../LabLib</Value>
     </ListValues>
   </avrgcc.compiler.directories.IncludePaths>
   <avrgcc.compiler.optimization.level>Optimize (-O1)</avrgcc.compiler.optimization.level>
@@ -131,8 +96,7 @@
   <avrgcc.compiler.optimization.AllocateBytesNeededForEnum>True</avrgcc.compiler.optimization.AllocateBytesNeededForEnum>
   <avrgcc.compiler.optimization.DebugLevel>Default (-g2)</avrgcc.compiler.optimization.DebugLevel>
   <avrgcc.compiler.warnings.AllWarnings>True</avrgcc.compiler.warnings.AllWarnings>
-  <avrgcc.compiler.warnings.ExtraWarnings>True</avrgcc.compiler.warnings.ExtraWarnings>
-  <avrgcc.compiler.warnings.Pedantic>True</avrgcc.compiler.warnings.Pedantic>
+  <avrgcc.linker.general.UseVprintfLibrary>True</avrgcc.linker.general.UseVprintfLibrary>
   <avrgcc.linker.libraries.Libraries>
     <ListValues>
       <Value>libm</Value>
@@ -148,17 +112,19 @@
     </ToolchainSettings>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="..\Common\hd44780.c">
+    <Compile Include="lcd.c">
       <SubType>compile</SubType>
-      <Link>hd44780.c</Link>
     </Compile>
-    <Compile Include="..\Common\hd44780.h">
-      <SubType>compile</SubType>
-      <Link>hd44780.h</Link>
-    </Compile>
-    <Compile Include="LCD_4bit_WriteOnly.c">
+    <Compile Include="lcd.h">
       <SubType>compile</SubType>
     </Compile>
   </ItemGroup>
-  <Import Project="$(AVRSTUDIO_EXE_PATH)\\Vs\\AvrGCC.targets" />
+  <ItemGroup>
+    <ProjectReference Include="..\LabLib\LabLib.cproj">
+      <Name>LabLib</Name>
+      <Project>{dce6c7e3-ee26-4d79-826b-08594b9ad897}</Project>
+      <Private>True</Private>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(AVRSTUDIO_EXE_PATH)\\Vs\\Compiler.targets" />
 </Project>
