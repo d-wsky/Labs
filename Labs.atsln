@@ -30,8 +30,6 @@ Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "FSM_Example", "FSM_Example\
 EndProject
 Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "LCD_Example", "LCD_Example\LCD_Example.cproj", "{8796C546-4E07-4395-9EBA-94A587FEA080}"
 EndProject
-Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "LiquidCrystalLib", "LiquidCrystalLib\LiquidCrystalLib.cproj", "{861CDBBC-6E3B-4700-9E34-5F19C6290455}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|AVR = Debug|AVR
@@ -94,10 +92,6 @@ Global
 		{8796C546-4E07-4395-9EBA-94A587FEA080}.Debug|AVR.Build.0 = Debug|AVR
 		{8796C546-4E07-4395-9EBA-94A587FEA080}.Release|AVR.ActiveCfg = Release|AVR
 		{8796C546-4E07-4395-9EBA-94A587FEA080}.Release|AVR.Build.0 = Release|AVR
-		{861CDBBC-6E3B-4700-9E34-5F19C6290455}.Debug|AVR.ActiveCfg = Debug|AVR
-		{861CDBBC-6E3B-4700-9E34-5F19C6290455}.Debug|AVR.Build.0 = Debug|AVR
-		{861CDBBC-6E3B-4700-9E34-5F19C6290455}.Release|AVR.ActiveCfg = Release|AVR
-		{861CDBBC-6E3B-4700-9E34-5F19C6290455}.Release|AVR.Build.0 = Release|AVR
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
