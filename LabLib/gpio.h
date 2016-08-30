@@ -38,6 +38,7 @@
 #define LABLIB_GPIO_H
 
 #include <avr/io.h>
+#include <assert.h>
 
 /*! \brief Тип данных, используемый для определения режима ввода-вывода.*/
 typedef enum {
@@ -46,6 +47,7 @@ typedef enum {
                                    включенной встроенной подтяжкой ножки
                                    к питанию.*/
     GPIO_MODE_OUT = 2,        /*!< Режим вывода данных из микроконтроллера.*/
+    GPIO_MODES_NUM,
 } GpioMode_t;
 
 /*! \brief Тип данных, используемый для выбора тактовой скорости соединения.*/
@@ -63,6 +65,7 @@ typedef enum {
     GPIO_PORTE,     /*!< Порт E.*/
     GPIO_PORTF,     /*!< Порт F.*/
     GPIO_PORTG,     /*!< Порт G.*/
+    GPIO_PORTS_NUM,
 } GpioPort_t;
 
 typedef enum {
@@ -281,27 +284,33 @@ static volatile uint8_t * dirs[] =
 
 static inline void gpioPinSet(const Gpio_t gpio)
 {
+    assert(gpio.port < GPIO_PORTS_NUM);
     // todo вход в критическую секцию здесь и ниже
     *ports[gpio.port] |= gpio.pin;
     // todo выход из критической секции здесь и ниже
 }
 static inline void gpioPinClear(const Gpio_t gpio)
 {
+    assert(gpio.port < GPIO_PORTS_NUM);
     *ports[gpio.port] &= ~gpio.pin;
 }
 
 static inline void gpioPinToggle(const Gpio_t gpio)
 {
+    assert(gpio.port < GPIO_PORTS_NUM);
     *ports[gpio.port] ^= gpio.pin;
 }
 
 static inline GpioLevel_t gpioPinGet(const Gpio_t gpio)
 {
+    assert(gpio.port < GPIO_PORTS_NUM);
     return (*pins[gpio.port]) & gpio.pin ? GPIO_LEVEL_HIGH : GPIO_LEVEL_LOW;
 }
 
 static inline void gpioPinModeSet(const Gpio_t gpio, GpioMode_t mode)
 {
+    assert(gpio.port < GPIO_PORTS_NUM);
+    assert(mode < GPIO_MODES_NUM);
     switch (mode) {
         case GPIO_MODE_IN:
             *dirs[gpio.port] &= ~gpio.pin;
@@ -314,6 +323,8 @@ static inline void gpioPinModeSet(const Gpio_t gpio, GpioMode_t mode)
         case GPIO_MODE_OUT:
             *dirs[gpio.port] |= gpio.pin;
             // со значением ports - будь, что будет
+            break;
+        default:
             break;
     }
 }
