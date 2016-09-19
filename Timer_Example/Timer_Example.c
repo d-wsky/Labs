@@ -26,45 +26,35 @@
  */
 
 /*
- * LabLib.c
+ * Timer_Example.c
  *
- * Created: 08-Aug-16 23:26:02
- *  Author: Denis Vasilkovskii
+ * Created: 13-Sep-16 00:37:48
+ * Author : Denis Vasilkovskii
  *
- *   About: Основной файл библиотеки. В нём содержится код, предназначенный для
- *          исполнения программы пользователя.
+ *  About : Самый простой пример использования библиотеки LibTime.h. Здесь
+ *          ножка, определяемая переменной blink_pin переключается с частотой
+ *          в 1 Гц основываясь на значении системного времени. Последнее
+ *          определяется при обращении к функции millis().
  */ 
 
+#include "gpio.h"
+#include "libtime.h"
 #include "structure.h"
-#include <avr/interrupt.h>
 
-void setup() __attribute__ ((weak));
-void loop() __attribute__((weak));
-extern void initLibTime();
+Gpio_t blink_pin = {
+    .port = GPIO_PORTA,
+    .pin = GPIO_PIN0
+};
 
 void setup() {
-    // пустая функция, которую может переопределить пользователь библиотеки
+    gpioPinModeSet(blink_pin, GPIO_MODE_OUT);
 }
 
 void loop() {
-    // пустая функция, которую может переопределить пользователь библиотеки
-}
-
-static void internalSetup() {
-    initLibTime();
-}
-
-int main(void)
-{
-    internalSetup();
-    
-    setup();
-
-    sei();
-    
-    while (1) {
-        loop();
+    if (millis() % 1000 == 0) {
+        gpioPinClear(blink_pin);
     }
-
-    return 0;
+    else if (millis() % 500 == 0) {
+        gpioPinSet(blink_pin);
+    }
 }

@@ -26,45 +26,34 @@
  */
 
 /*
- * LabLib.c
+ * libtime.h
  *
- * Created: 08-Aug-16 23:26:02
+ * Created: 12-Sep-16 23:29:03
  *  Author: Denis Vasilkovskii
- *
- *   About: Основной файл библиотеки. В нём содержится код, предназначенный для
- *          исполнения программы пользователя.
  */ 
 
-#include "structure.h"
-#include <avr/interrupt.h>
 
-void setup() __attribute__ ((weak));
-void loop() __attribute__((weak));
-extern void initLibTime();
+#ifndef LABLIB_LIBTIME_H
+#define LABLIB_LIBTIME_H
 
-void setup() {
-    // пустая функция, которую может переопределить пользователь библиотеки
-}
+#include <stdint.h>
 
-void loop() {
-    // пустая функция, которую может переопределить пользователь библиотеки
-}
+/*! \brief Возвращает количество миллисекунд, прошедших со времени запуска
+программы. Время переполнения этого счетчика (сброса обратно в нуль) около
+50 дней.
 
-static void internalSetup() {
-    initLibTime();
-}
+\return 32-битное целое без знака, равное числу миллисекунд, прошедших с
+момента подачи питания.
+*/
+uint32_t millis();
 
-int main(void)
-{
-    internalSetup();
-    
-    setup();
+/*! \brief Возвращает количество микросекунд, прошедших со времени запуска
+программы. Время переполнения этого счетчика (сброса обратно в нуль) около
+70 минут.
 
-    sei();
-    
-    while (1) {
-        loop();
-    }
+\param 32-битное целое без знака, равное числу микросекунд, прошедших с
+момента подачи питания.
+*/
+uint32_t micros();
 
-    return 0;
-}
+#endif /* LABLIB_LIBTIME_H */

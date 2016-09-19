@@ -30,6 +30,8 @@ Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "FSM_Example", "FSM_Example\
 EndProject
 Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "LCD_Example", "LCD_Example\LCD_Example.cproj", "{8796C546-4E07-4395-9EBA-94A587FEA080}"
 EndProject
+Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "Timer_Example", "Timer_Example\Timer_Example.cproj", "{4BC645AA-0175-41C7-8CCE-E96A37373981}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|AVR = Debug|AVR
@@ -92,6 +94,10 @@ Global
 		{8796C546-4E07-4395-9EBA-94A587FEA080}.Debug|AVR.Build.0 = Debug|AVR
 		{8796C546-4E07-4395-9EBA-94A587FEA080}.Release|AVR.ActiveCfg = Release|AVR
 		{8796C546-4E07-4395-9EBA-94A587FEA080}.Release|AVR.Build.0 = Release|AVR
+		{4BC645AA-0175-41C7-8CCE-E96A37373981}.Debug|AVR.ActiveCfg = Debug|AVR
+		{4BC645AA-0175-41C7-8CCE-E96A37373981}.Debug|AVR.Build.0 = Debug|AVR
+		{4BC645AA-0175-41C7-8CCE-E96A37373981}.Release|AVR.ActiveCfg = Release|AVR
+		{4BC645AA-0175-41C7-8CCE-E96A37373981}.Release|AVR.Build.0 = Release|AVR
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
