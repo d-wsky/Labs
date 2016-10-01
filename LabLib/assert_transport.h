@@ -43,16 +43,22 @@
 /*! \brief Интерфейс функции, осуществляющей инициализацию транспортного
 протокола передачи информации о случившемся Assert'е.*/
 typedef void (*transport_init_t)();
+
 /*! \brief Интерфейс функции, осуществляющей передачу информацию о самом
 Assert'е в выбранный транспортный интерфейс.*/
 typedef void (*transport_print_t)(const char * __func, const char * __file, 
                                   int __lineno, const char * __sexp);
+
+/*! \brief Интерфейс функции, которая будет вызвана после того, как вывод
+информации об Assert'е будет завершен.*/
+typedef void (*transport_halt_t)();
 
 /*! \brief Структура, описывающая транспортный интерфейс для передачи 
 Assert'ов пользователю.*/
 typedef struct {
     transport_init_t   init;
     transport_print_t  print;
+    transport_halt_t   halt;
 } assert_transport_t;
 
 /* список доступных на данный момент транспортов Assert'ов */

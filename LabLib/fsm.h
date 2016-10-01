@@ -53,7 +53,6 @@
 #ifndef FSM_H
 #define FSM_H
 
-#include <avr/pgmspace.h>
 #include <stdbool.h>
 #include <stdint.h>
 #include <stddef.h>

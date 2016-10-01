@@ -109,4 +109,12 @@ void interruptAttach(IrqPin_t pin, Isr_t isr, IrqMode_t mode);
 */
 void interruptDeattach(IrqPin_t pin);
 
+/*! \brief Восстанавливает возможность возникновения прерываний, если они были
+заблокированы с помощью \ref interruptsDisable().*/
+void interruptsEnable();
+
+/*! \brief Запрещает возникновение любых прерываний до тех пор, пока не
+будет вызвана функция \ref interruptsEnable().*/
+void interruptsDisable();
+
 #endif /* INTERRUPTS_H */

@@ -18,10 +18,10 @@ int usart0_putchar_buffered(char c, FILE *stream) ;
 /* Прием символа. Возвратит 0, если новых символов в аппаратном буфере нет */
 char usart0_getchar_nonblocking(FILE *stream) ;
 /* Прием символа. Не завершит исполнения, пока не получит символ */
-char usart0_getchar_blocking(FILE *stream) ;
+int usart0_getchar_blocking(struct __file *);
 
 #ifdef USE_BUFFERED_IO
-char usart0_getchar_blocking_buffered(FILE *stream);
+int usart0_getchar_blocking_buffered(struct __file *stream);
 int usart0_putchar_buffered(char c, FILE *stream) ;
 #endif
 

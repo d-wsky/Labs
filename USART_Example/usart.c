@@ -50,7 +50,7 @@ char usart0_getchar_nonblocking(FILE *stream) {
 }
 
 /* Прием символа, если таковые имеются */
-char usart0_getchar_blocking(FILE *stream) {
+int usart0_getchar_blocking(struct __file * stream) {
     /* зависаем в цикле, пока не появятся новые данные */
     while (!USART0_RECIEVE_COMPLETE) ;
     return UDR0;
@@ -70,7 +70,7 @@ ISR(USART0_TX_vect) {
     }
 }
 
-char usart0_getchar_blocking_buffered(FILE *stream) {
+int	usart0_getchar_blocking_buffered(struct __file * stream) {
     while (ringbuffer_is_empty(&rx_buffer)) ;
     return ringbuffer_remove(&rx_buffer);
 }

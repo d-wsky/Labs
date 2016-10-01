@@ -35,8 +35,8 @@
 #ifdef DEBUG
 
 #include <assert.h>
-#include <avr/interrupt.h>
 #include "assert_transport.h"
+#include "interrupts.h"
 
 #ifdef ASSERT_TRANSPORT_LCD
 assert_transport_t * assert_transport = &lcd_assert_transport;
@@ -49,13 +49,10 @@ assert_transport_t * assert_transport = &serial_assert_transport;
 
 void __assert(const char *__func, const char *__file, int __lineno, 
               const char *__sexp) {
-    cli();
+    interruptsDisable();
     assert_transport->init();
     assert_transport->print(__func, __file, __lineno, __sexp);
-    
-    while (1) {
-        // дальнейшее исполнение программы приостановлено
-    };
+    assert_transport->halt();
 }
 
 #endif // DEBUG

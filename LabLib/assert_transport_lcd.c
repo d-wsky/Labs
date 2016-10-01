@@ -40,10 +40,12 @@
 static void lcd_init();
 static void lcd_print(const char *__func, const char *__file, int __lineno,
                       const char *__sexp);
+static void lcd_halt();
 
 assert_transport_t lcd_assert_transport = {
     .init = lcd_init, 
-    .print = lcd_print
+    .print = lcd_print,
+    .halt = lcd_halt,
 };
 
 static const lcdPinout_t lcdPinout = {
@@ -82,3 +84,8 @@ static void lcd_print(const char *__func, const char *__file, int __lineno,
     lcdPrint(buf);
 }
 
+static void lcd_halt() {
+    while (1) {
+        // дальнейшее исполнение программы приостановлено
+    };
+}
