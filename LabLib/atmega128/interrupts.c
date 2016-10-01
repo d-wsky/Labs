@@ -106,3 +106,10 @@ static inline void disableIrq(IrqPin_t pin) {
     EIFR   = _BV(pin);
 }
 
+void interruptsEnable() {
+    sei();
+}
+
+void interruptsDisable() {
+   cli();
+}

@@ -91,6 +91,7 @@
   <avrgcc.compiler.directories.IncludePaths>
     <ListValues>
       <Value>%24(PackRepoDir)\atmel\ATmega_DFP\1.0.106\include</Value>
+      <Value>..</Value>
     </ListValues>
   </avrgcc.compiler.directories.IncludePaths>
   <avrgcc.compiler.optimization.level>Optimize (-O1)</avrgcc.compiler.optimization.level>
@@ -114,22 +115,34 @@
     </ToolchainSettings>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="assert.c">
-      <SubType>compile</SubType>
-    </Compile>
     <Compile Include="assert_transport.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="assert_transport_lcd.c">
+    <Compile Include="atmega128\assert_transport_lcd.c">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="delay.c">
+    <Compile Include="atmega128\delay.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="atmega128\interrupts.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="atmega128\lcd.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="atmega128\libtime.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="common\assert.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="common\fsm.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="common\LabLib.c">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="delay.h">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="fsm.c">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="fsm.h">
@@ -138,22 +151,10 @@
     <Compile Include="gpio.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="interrupts.c">
-      <SubType>compile</SubType>
-    </Compile>
     <Compile Include="interrupts.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="LabLib.c">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="lcd.c">
-      <SubType>compile</SubType>
-    </Compile>
     <Compile Include="lcd.h">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="libtime.c">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="libtime.h">
@@ -165,6 +166,10 @@
     <Compile Include="utils.h">
       <SubType>compile</SubType>
     </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="atmega128" />
+    <Folder Include="common" />
   </ItemGroup>
   <Import Project="$(AVRSTUDIO_EXE_PATH)\\Vs\\Compiler.targets" />
 </Project>
