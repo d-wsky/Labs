@@ -1,0 +1,118 @@
+# 
+# Copyright (c) 2016, Denis Vasilkovskii
+# All rights reserved.
+#
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions are met:
+#      - Redistributions of source code must retain the above copyright
+#        notice, this list of conditions and the following disclaimer.
+#      - Redistributions in binary form must reproduce the above copyright
+#        notice, this list of conditions and the following disclaimer in the
+#        documentation and/or other materials provided with the distribution.
+#      - Neither the name of the OINPE NRNU MEPhI nor the
+#        names of its contributors may be used to endorse or promote products
+#        derived from this software without specific prior written permission.
+#
+# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+# ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+# WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+# DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER BE LIABLE FOR ANY
+# DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+# (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+# LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+# ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+# (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+# SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+#
+
+#
+# Makefile.in
+#
+# Created: 01-Oct-16 21:36:31
+#  Author: Denis Vasilkovskii
+#
+# Disclaimer: All comments are in Windows CP1251 (not UTF8) to guarantee support
+# for all make versions.
+#  About : Файл содержащий общие настройки всех Makefile'ов, используемых 
+#          в системе сборки
+
+# отключение всех встроенных переменных Make
+MAKEFLAGS = -rR --no-print-directory
+
+# параметры проекта
+OUTPUT_DIR = Output
+LIB_DIR := LabLib
+LIB_NAME := LabLib
+LIB_FILE += $(LIB_DIR)/$(OUTPUT_DIR)/lib$(LIB_NAME).a
+UNIT_DIR = Tests/unit
+# если установить в 1, то Make покажет все команды, которые исполняются в процессе
+# сборки. Если установить в 0, то показывается только имя собираемого файла
+VERBOSE = 0
+
+# реализация дословного механизма
+ifeq ("$(VERBOSE)","1")
+    Q := 
+else
+    Q := @
+endif
+
+# определение платформы, на которой осуществляется запуск этого файла
+UNAME_OS := $(shell uname --operating-system)
+ifeq ($(UNAME_OS),Msys)
+    HOST_OS = windows
+    EXTENSION = .exe
+else ifeq ($(UNAME_OS),GNU/Linux)
+    HOST_OS = linux
+    EXTENSION =
+else
+    $(error Unsupported platform)
+endif
+
+# названия утилит, используемых при компиляции
+AS      = as
+LD      = gcc
+CC      = gcc
+CPP     = g++
+AR      = ar
+NM      = nm
+STRIP   = strip
+OBJCOPY = objcopy
+OBJDUMP = objdump
+SIZE    = size
+
+# стандартные действия над файловой системой: создание папки и удаление файла или папки
+MK      := mkdir -p
+RM      := rm -rf
+
+# флаги компилятора
+CFLAGS  = -O3
+CFLAGS += -std=c99 -pipe
+CFLAGS += -c
+CFLAGS += -Wall -Werror
+CFLAGS += -g
+
+# список директорий и файлов, включаемых при сборке каждого файла
+INCLUDE_DIRS = -I$(ROOT_PATH)/$(LIB_DIR)/ \
+
+# добавляем директории к флагам компиляции
+CFLAGS += $(INCLUDE_DIRS)
+
+# Флаги линкера (редактора связей)
+LDFLAGS  = -L $(ROOT_PATH)/$(LIB_NAME)/$(OUTPUT_DIR)
+
+# флаги утилиты size, выдающей размер полученного объектного или исполняемого файла
+SIZEFLAGS := -t
+SIZEFLAGS-NO_TOTALS += 
+
+# украшательство перед началом вывода размеров
+SIZE_INTRO  = ---------------- Sizes ----------------
+# украшательство после вывода размера
+SIZE_OUTRO  = ---------------------------------------
+
+# теоретически могут быть и флаги для сборки ассемблерного кода
+ASMFLAGS = 
+
+# флаги для утилиты архивации, которая сделает из множества объектных файлов библиотеку
+AR_KEYS  = -r -c -s
+# флаг для обратного процесса распаковки библиотеки на отдельные объектные файлы
+AR_EXTRACT_KEYS := -x

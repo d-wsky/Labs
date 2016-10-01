@@ -13,10 +13,10 @@
 *.map
 *.o
 *.srec
+*.exe
 # Игнорирование файла во ВСЕХ директориях
 # Например /Ports_Example/Debug/makedep.mk
 makedep.mk
-Makefile
 # Игнорирование конкретного файла ТОЛЬКО в корне проекта
 # (корнём считается расположение файла .gitignore)
 /Labs.atsuo
@@ -25,6 +25,8 @@ Makefile
 # Игнорирование всех файлов и папок в ЛЮБЫХ директориях с указанным именем
 # Например /I2C_RTC_Example/Debug/Makefile
 */Debug/*
+*/Release/*
+*/Output/*
 .vs
 
 # ---- РАЗНОЕ ----
