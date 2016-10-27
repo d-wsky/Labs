@@ -66,5 +66,25 @@ void loop() {
 */
 #define ARRAY_SIZE(a)              (sizeof(a)/sizeof(a[0]))
 
+/*! \brief Внутренний макрос, позволяющий сделать вывод информации на дисплей
+независимым от типа данных.*/
+#define PRINTF_DEC_FORMAT(x)                                 \
+                    _Generic((x),                            \
+                             char: "%c",                     \
+                             const char *: "%s",             \
+                             signed char: "%hhd",            \
+                             unsigned char: "%hhu",          \
+                             signed short: "%hd",            \
+                             unsigned short: "%hu",          \
+                             signed int: "%d",               \
+                             unsigned int: "%u",             \
+                             long int: "%ld",                \
+                             unsigned long int: "%lu",       \
+                             long long int: "%lld",          \
+                             unsigned long long int: "%llu", \
+                             float: "%f",                    \
+                             char *: "%s",                   \
+                             void *: "%p")
+
 
 #endif /* UTILS_H_ */

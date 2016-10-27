@@ -37,6 +37,7 @@
 #define LABLIB_LCD_H
 
 #include "gpio.h"
+#include "utils.h"
 #include <stdio.h>
 #include <avr/pgmspace.h>
 
@@ -129,26 +130,6 @@ lcdWrite(3);   // отображает пользовательский симв
 */
 int lcdWrite(uint8_t character);
 
-/*! \brief Внутренний макрос, позволяющий сделать вывод информации на дисплей
-независимым от типа данных.*/
-#define printf_dec_format(x)                                 \
-                    _Generic((x),                            \
-                             char: "%c",                     \
-                             const char *: "%s",             \
-                             signed char: "%hhd",            \
-                             unsigned char: "%hhu",          \
-                             signed short: "%hd",            \
-                             unsigned short: "%hu",          \
-                             signed int: "%d",               \
-                             unsigned int: "%u",             \
-                             long int: "%ld",                \
-                             unsigned long int: "%lu",       \
-                             long long int: "%lld",          \
-                             unsigned long long int: "%llu", \
-                             float: "%f",                    \
-                             char *: "%s",                   \
-                             void *: "%p")
-
 /*! \brief Функция вывода текста на дисплей. Данная функция поддерживает
 любой встроенный тип данных и автоматически преобразует целочисленные типы
 в строку, содержащую их двоичное представление. Например:
@@ -162,7 +143,7 @@ lcdPrint(42);             // выводит "42"
                        do {                                 \
                            FILE * stdout_copy_ = stdout;    \
                            stdout = &lcd_iostream_;         \
-                           printf(printf_dec_format(x), x); \
+                           printf(PRINTF_DEC_FORMAT(x), x); \
                            stdout = stdout_copy_;           \
                        } while (0);
 

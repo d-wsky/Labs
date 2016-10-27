@@ -86,10 +86,11 @@ RM      := rm -rf
 
 # флаги компилятора
 CFLAGS  = -O3
-CFLAGS += -std=c99 -pipe
+CFLAGS += -std=c11 -pipe
 CFLAGS += -c
 CFLAGS += -Wall -Werror
 CFLAGS += -g
+CFLAGS += -DDEBUG
 
 # список директорий и файлов, включаемых при сборке каждого файла
 INCLUDE_DIRS = -I$(ROOT_PATH)/$(LIB_DIR)/ \

@@ -47,6 +47,7 @@ common += $(LIB_NAME)
 
 pc += libtime
 pc += interrupts
+pc += assert
 
 # с помощью этой строчки списки common и pc превращаются в названия файлов с относительными путями
 objects_common = $(addsuffix .o,$(addprefix $(OUTPUT_DIR)/,$(addprefix common/,$(common))))
