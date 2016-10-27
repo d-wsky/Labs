@@ -28,11 +28,12 @@
 /*
  * fsm_linear.c
  *
- * Created: 01-Oct-16 21:44:38
+ * Created: 28-Oct-16 01:00:34
  *  Author: Denis Vasilkovskii
  *
- *   About: Это тест простого конечного автомата, который линейно перебирает
- *          свои состояния друг за другом.
+ *   About: Это тест простого конечного автомата, в котором отстутствует
+ *          одно из действий, а также осуществляется переход назад по
+ *          таблице описания.
  */ 
 
 #include "fsm.h"
@@ -45,7 +46,6 @@
 typedef enum {
     ST_FIRST,
     ST_SECOND,
-    ST_THIRD,
 } test_states_t;
 
 typedef enum {
@@ -54,79 +54,45 @@ typedef enum {
 
 typedef enum {
     NOTHING_CALLED,
-    FIRST_ACTION_CALLED,
     SECOND_ACTION_CALLED,
-    THIRD_ACTION_CALLED,
 } test_callback_states_t;
 
-void act_first(void * p_data);
 void act_second(void * p_data);
-void act_third(void * p_data);
 
 FsmTable_t test_table[] = {
     FSM_STATE     (ST_FIRST),
-    FSM_TRANSITION(EV_NEXT, FSM_NO_GUARD, act_first,  ST_SECOND),
+    FSM_TRANSITION(EV_NEXT, FSM_NO_GUARD, FSM_NO_ACTION,  ST_SECOND),
 
     FSM_STATE     (ST_SECOND),
-    FSM_TRANSITION(EV_NEXT, FSM_NO_GUARD, act_second, ST_THIRD),
-
-    FSM_STATE     (ST_THIRD),
-    FSM_TRANSITION(EV_NEXT, FSM_NO_GUARD, act_third,  FSM_SAME_STATE),
+    FSM_TRANSITION(EV_NEXT, FSM_NO_GUARD, act_second,     ST_FIRST),
 };
 
-void * private_data;
 test_callback_states_t callback_state = NOTHING_CALLED;
 uint32_t callback_counter = 0;
 Fsm_t test_fsm;
 
-void act_first(void * p_data)
-{
-    ASSERT_EQ(p_data, private_data);
-    callback_state = FIRST_ACTION_CALLED;
-    callback_counter++;
-}
-
 void act_second(void * p_data)
 {
-    ASSERT_EQ(p_data, private_data);
     callback_state = SECOND_ACTION_CALLED;
     callback_counter++;
 }
 
-void act_third(void * p_data)
-{
-    ASSERT_EQ(p_data, private_data);
-    callback_state = THIRD_ACTION_CALLED;
-    callback_counter++;
-}
-
 void setup() {
-    private_data = (void *)0xDEADBABE;
     fsmInit(&test_fsm, test_table, ARRAY_SIZE(test_table), ST_FIRST);
 }
 
 void loop() {
     ASSERT_EQ(fsmCurrentState(&test_fsm), ST_FIRST);
 
-    fsmEventPost(EV_NEXT, &test_fsm, private_data);
-    ASSERT_EQ(callback_state,   FIRST_ACTION_CALLED);
-    ASSERT_EQ(callback_counter, 1);
+    fsmEventPost(EV_NEXT, &test_fsm, NULL);
+    ASSERT_EQ(callback_state,             NOTHING_CALLED);
+    ASSERT_EQ(callback_counter,           0);
     ASSERT_EQ(fsmCurrentState(&test_fsm), ST_SECOND);
 
-    fsmEventPost(EV_NEXT, &test_fsm, private_data);
-    ASSERT_EQ(callback_state,   SECOND_ACTION_CALLED);
-    ASSERT_EQ(callback_counter, 2);
-    ASSERT_EQ(fsmCurrentState(&test_fsm), ST_THIRD);
-
-    fsmEventPost(EV_NEXT, &test_fsm, private_data);
-    ASSERT_EQ(callback_state,   THIRD_ACTION_CALLED);
-    ASSERT_EQ(callback_counter, 3);
-    ASSERT_EQ(fsmCurrentState(&test_fsm), ST_THIRD);
-
-    fsmEventPost(EV_NEXT, &test_fsm, private_data);
-    ASSERT_EQ(callback_state,   THIRD_ACTION_CALLED);
-    ASSERT_EQ(callback_counter, 4);
-    ASSERT_EQ(fsmCurrentState(&test_fsm), ST_THIRD);
+    fsmEventPost(EV_NEXT, &test_fsm, NULL);
+    ASSERT_EQ(callback_state,             SECOND_ACTION_CALLED);
+    ASSERT_EQ(callback_counter,           1);
+    ASSERT_EQ(fsmCurrentState(&test_fsm), ST_FIRST);
 
     _Exit(EXIT_OK);
 }

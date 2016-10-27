@@ -40,7 +40,9 @@ ROOT_PATH=../..
 include $(ROOT_PATH)/Makefile.in
 
 # названи€ юнит-тестов, которые будут скомпилированы
-test_names = fsm_linear
+test_names = fsm_linear            \
+             fsm_no_action         \
+             fsm_guards
 
 # исключаем флаг "только компил€ци€", чтобы на выходе был исполн€емый файл
 CFLAGS := $(filter-out -c,$(CFLAGS))

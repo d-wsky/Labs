@@ -28,11 +28,13 @@
 /*
  * fsm_linear.c
  *
- * Created: 01-Oct-16 21:44:38
+ * Created: 28-Oct-16 01:03:06
  *  Author: Denis Vasilkovskii
  *
- *   About: Это тест простого конечного автомата, который линейно перебирает
- *          свои состояния друг за другом.
+ *   About: Это тест простого конечного автомата, в котором несколько
+ *          попыток перехода блокируются с помощью контрольной функции,
+ *          а также осуществляется выбор действия в зависимости от значения
+ *          данной функции.
  */ 
 
 #include "fsm.h"
@@ -45,7 +47,6 @@
 typedef enum {
     ST_FIRST,
     ST_SECOND,
-    ST_THIRD,
 } test_states_t;
 
 typedef enum {
@@ -54,6 +55,7 @@ typedef enum {
 
 typedef enum {
     NOTHING_CALLED,
+    GUARD_CALLED,
     FIRST_ACTION_CALLED,
     SECOND_ACTION_CALLED,
     THIRD_ACTION_CALLED,
@@ -62,71 +64,73 @@ typedef enum {
 void act_first(void * p_data);
 void act_second(void * p_data);
 void act_third(void * p_data);
+bool guard_threshold(void * p_data);
 
 FsmTable_t test_table[] = {
     FSM_STATE     (ST_FIRST),
-    FSM_TRANSITION(EV_NEXT, FSM_NO_GUARD, act_first,  ST_SECOND),
+    FSM_TRANSITION(EV_NEXT, guard_threshold, act_first,      ST_SECOND),
 
     FSM_STATE     (ST_SECOND),
-    FSM_TRANSITION(EV_NEXT, FSM_NO_GUARD, act_second, ST_THIRD),
-
-    FSM_STATE     (ST_THIRD),
-    FSM_TRANSITION(EV_NEXT, FSM_NO_GUARD, act_third,  FSM_SAME_STATE),
+    FSM_TRANSITION(EV_NEXT, guard_threshold, act_second,     ST_FIRST),
+    FSM_TRANSITION(EV_NEXT, FSM_OTHERWISE,   act_third,      FSM_SAME_STATE),
 };
 
-void * private_data;
-test_callback_states_t callback_state = NOTHING_CALLED;
 uint32_t callback_counter = 0;
+test_callback_states_t callback_state = NOTHING_CALLED;
 Fsm_t test_fsm;
+const uint32_t THRESHOLD = 3;
+
+bool guard_threshold(void * p_data) {
+    callback_counter++;
+    uint32_t * p_int = (uint32_t *)p_data;
+    callback_state = GUARD_CALLED;
+    return *p_int == THRESHOLD;
+}
 
 void act_first(void * p_data)
 {
-    ASSERT_EQ(p_data, private_data);
+    ASSERT_EQ(*(uint32_t *)p_data, THRESHOLD);
     callback_state = FIRST_ACTION_CALLED;
-    callback_counter++;
 }
 
 void act_second(void * p_data)
 {
-    ASSERT_EQ(p_data, private_data);
     callback_state = SECOND_ACTION_CALLED;
-    callback_counter++;
 }
 
 void act_third(void * p_data)
 {
-    ASSERT_EQ(p_data, private_data);
+    ASSERT_EQ(callback_state, GUARD_CALLED);
     callback_state = THIRD_ACTION_CALLED;
-    callback_counter++;
 }
 
 void setup() {
-    private_data = (void *)0xDEADBABE;
     fsmInit(&test_fsm, test_table, ARRAY_SIZE(test_table), ST_FIRST);
 }
 
 void loop() {
-    ASSERT_EQ(fsmCurrentState(&test_fsm), ST_FIRST);
+    uint32_t threshold_check = 0;
+    for (; threshold_check < THRESHOLD; threshold_check++) {
+        fsmEventPost(EV_NEXT, &test_fsm, &threshold_check);
+        ASSERT_EQ(callback_state,             GUARD_CALLED);
+        ASSERT_EQ(fsmCurrentState(&test_fsm), ST_FIRST);
+        ASSERT_EQ(callback_counter,           threshold_check + 1);
+    }
 
-    fsmEventPost(EV_NEXT, &test_fsm, private_data);
-    ASSERT_EQ(callback_state,   FIRST_ACTION_CALLED);
-    ASSERT_EQ(callback_counter, 1);
+    fsmEventPost(EV_NEXT, &test_fsm, &threshold_check);
+    ASSERT_EQ(callback_state,             FIRST_ACTION_CALLED);
+    ASSERT_EQ(callback_counter,           threshold_check + 1);
     ASSERT_EQ(fsmCurrentState(&test_fsm), ST_SECOND);
 
-    fsmEventPost(EV_NEXT, &test_fsm, private_data);
-    ASSERT_EQ(callback_state,   SECOND_ACTION_CALLED);
-    ASSERT_EQ(callback_counter, 2);
-    ASSERT_EQ(fsmCurrentState(&test_fsm), ST_THIRD);
+    threshold_check = THRESHOLD + 1;
+    fsmEventPost(EV_NEXT, &test_fsm, &threshold_check);
+    ASSERT_EQ(callback_state,             THIRD_ACTION_CALLED);
+    ASSERT_EQ(fsmCurrentState(&test_fsm), ST_SECOND);
 
-    fsmEventPost(EV_NEXT, &test_fsm, private_data);
-    ASSERT_EQ(callback_state,   THIRD_ACTION_CALLED);
-    ASSERT_EQ(callback_counter, 3);
-    ASSERT_EQ(fsmCurrentState(&test_fsm), ST_THIRD);
-
-    fsmEventPost(EV_NEXT, &test_fsm, private_data);
-    ASSERT_EQ(callback_state,   THIRD_ACTION_CALLED);
-    ASSERT_EQ(callback_counter, 4);
-    ASSERT_EQ(fsmCurrentState(&test_fsm), ST_THIRD);
+    threshold_check = THRESHOLD;
+    fsmEventPost(EV_NEXT, &test_fsm, &threshold_check);
+    ASSERT_EQ(callback_state,             SECOND_ACTION_CALLED);
+    ASSERT_EQ(fsmCurrentState(&test_fsm), ST_FIRST);
 
     _Exit(EXIT_OK);
 }
