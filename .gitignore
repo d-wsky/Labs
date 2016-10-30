@@ -14,6 +14,8 @@
 *.o
 *.srec
 *.exe
+*.out
+*.err
 # Игнорирование файла во ВСЕХ директориях
 # Например /Ports_Example/Debug/makedep.mk
 makedep.mk
