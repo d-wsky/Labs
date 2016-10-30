@@ -37,16 +37,24 @@
 #include <stdbool.h>
 #include <stddef.h>
 
+/* Универсальное средство для того, чтобы сообщить, что функция не нашла то, что
+искала.*/
+#define NOT_FOUND          UINT8_MAX
+
+/* Возвращает истину, если текущий элемент таблицы является описанием состояния.*/
 static inline bool IsState(FsmTableItem_t * item) {
     return item->event == FSM_NO_EVENT;
 }
 
-void fsmInit(Fsm_t * fsm, FsmTable_t * table, uint8_t table_size, FsmState_t init_state) {
-    fsm->table = table;
-    fsm->current_state = init_state;
-    fsm->table_size = table_size;
-}
+/*! \brief Линейно проходит таблицу, описывающую конечный автомат и находит в нём
+состояние. Следом за состоянием будут идти события, привязанные к этому
+состоянию.
 
+\param fsm Указатель на конечный автомат.
+\param state Состояние, которое необходимо найти.
+\param starting_pos Позиция в таблице, с которой начинается поиск.
+
+\return Индекс в таблице или #NOT_FOUND, если такое состояние не было найдено.*/
 static uint8_t FindState(Fsm_t * fsm, FsmState_t state, uint8_t starting_pos) {
     for (uint8_t i = starting_pos; i < fsm->table_size; i++) {
         if (IsState(&fsm->table[i])) {
@@ -55,9 +63,18 @@ static uint8_t FindState(Fsm_t * fsm, FsmState_t state, uint8_t starting_pos) {
             }
         }
     }
-    return UINT8_MAX;
+    return NOT_FOUND;
 }
 
+/*! \brief Линейно проходит таблицу, описывающую конечный автомат и находит в нём
+заданное событие. Останавливает поиск, если оказывается, что текущий элемент
+таблицы описывает состояние.
+
+\param fsm Указатель на конечный автомат.
+\param event Событие, которое необходимо найти.
+\param starting_pos Позиция в таблице, с которой начинается поиск.
+
+\return Индекс в таблице или #NOT_FOUND, если такое событие не было найдено.*/
 static uint8_t FindEvent(Fsm_t * fsm, FsmEvent_t event, uint8_t starting_pos) {
     for (uint8_t i = starting_pos; i < fsm->table_size; i++) {
         if (fsm->table[i].event == event) {
@@ -67,40 +84,64 @@ static uint8_t FindEvent(Fsm_t * fsm, FsmEvent_t event, uint8_t starting_pos) {
             break;
         }
     }
-    return UINT8_MAX;
+    return NOT_FOUND;
 }
 
+/*! \brief Пробует найти и исполнить событие для заданного состояния.
+
+Алгоритм работает в два этапа. На первом этапе осуществляется поиск переданного
+состояния в таблице. Если поиск был удачен, начинается поиск переданного события
+в этом состоянии. Если и в этом случае есть попадание, то проверяется условие
+(guard) и производится исполнение заданного действия (action), после чего
+алгоритм завершает свою работу.
+
+\param fsm Указатель на конечный автомат.
+\param state Состояние, для которого предлагается исполнить событие.
+\param event Событие, которое предлагается обработать конечному автомату.
+\param p_data Приватные данные, которые были переданы вместе с событием.
+
+\return Истина, если событие было успешно обработано.
+        Ложь, если не пустило условие или событие не было найдено для данного
+        состояния.*/
 static bool TryStateForEvent(Fsm_t * fsm, FsmState_t state, FsmEvent_t event, void * p_data) {
     uint8_t state_position = FindState(fsm, state, 0);
-    if (state_position != UINT8_MAX) {
-        uint8_t event_position = FindEvent(fsm, event, state_position + 1);
-        while ((event_position != UINT8_MAX)) {
-            FsmTableItem_t * p_item = &fsm->table[event_position];
-            bool guard_pass = true;
-            if (p_item->guard != FSM_NO_GUARD) {
-                guard_pass = p_item->guard(p_data);
-            }
-            if (guard_pass) {
-                if (p_item->action != FSM_NO_ACTION) {
-                    p_item->action(p_data);
-                }
-                if (p_item->next_state != FSM_SAME_STATE) {
-                    fsm->current_state = p_item->next_state;
-                }
-                return false;
-            }
-            event_position = FindEvent(fsm, event, event_position + 1);
-        }
-    }
-    else {
+    if (state_position == NOT_FOUND) {
         return false;
     }
-    return true;
+
+    uint8_t event_position = state_position;
+    // сложная семантика для предиката цикла - соединённое присвоение и проверка
+    // сначала производится вызов FindEvent, потом результат вызова кладётся
+    // в event_position и, наконец, производится сравнение значения event_position
+    // с константой NOT_FOUND
+    while ((event_position = FindEvent(fsm, event, event_position + 1)) != NOT_FOUND) {
+        FsmTableItem_t * p_item = &fsm->table[event_position];
+        bool guard_pass = true;
+        if (p_item->guard != FSM_NO_GUARD) {
+            guard_pass = p_item->guard(p_data);
+        }
+        if (guard_pass) {
+            if (p_item->action != FSM_NO_ACTION) {
+                p_item->action(p_data);
+            }
+            if (p_item->next_state != FSM_SAME_STATE) {
+                fsm->current_state = p_item->next_state;
+            }
+            return true;
+        }
+    }
+
+    return false;
+}
+
+void fsmInit(Fsm_t * fsm, FsmTable_t * table, uint8_t table_size, FsmState_t init_state) {
+    fsm->table = table;
+    fsm->current_state = init_state;
+    fsm->table_size = table_size;
 }
 
 void fsmEventPost(FsmEvent_t event, Fsm_t * fsm, void * p_data) {
-     bool continue_with_any_state = TryStateForEvent(fsm, fsm->current_state, event, p_data);
-     if (continue_with_any_state) {
+     if (!TryStateForEvent(fsm, fsm->current_state, event, p_data)) {
          TryStateForEvent(fsm, FSM_ANY_STATE, event, p_data);
      }
 }
