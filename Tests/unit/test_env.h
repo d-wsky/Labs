@@ -90,6 +90,10 @@
         }\
     } while (0)
 
-
+#define FAIL(lhs) \
+    do { \
+        fprintf(stderr, "Error at line %d of file %s." END_OF_LINE \
+                        "Description: " #lhs END_OF_LINE, __LINE__, __FILE__);\
+    } while (0)
 
 #endif /* TEST_ENV_H_INCLUDED */
