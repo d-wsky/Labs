@@ -34,6 +34,7 @@
 
 #include "tone.h"
 #include "libtime.h"
+#include "softtimer.h"
 #include "utils.h"
 #include <stdbool.h>
 #include <avr/interrupt.h>
@@ -67,28 +68,28 @@
 #define UNUSED_PIN (const Gpio_t){.port = GPIO_PORTS_NUM}
 static const uint32_t HW_TIMER_MAX = 254;
 static volatile Gpio_t used_pin_;
-static timer_t * ms_timer_ptr_;
+static softtimer_t * ms_timer_ptr_;
 
 static inline bool IsPlaying() {
-	return used_pin_.port != GPIO_PORTS_NUM;
+    return used_pin_.port != GPIO_PORTS_NUM;
 }
 
 static void timer_callback() {
-	noTone(used_pin_);
+    noTone(used_pin_);
 }
 
 ISR(TIMER2_COMP_vect) {
     if (IsPlaying()) {
-		gpioPinToggle(used_pin_);
-	}
+        gpioPinToggle(used_pin_);
+    }
 }
 
 void initTone() {
-    timer_status_t status = timer_get(&ms_timer_ptr_);
-    assert(status == TIMER_STATUS_OK);
+    ms_timer_ptr_ = softtimer_alloc();
+    assert(ms_timer_ptr_ != NULL);
     
-    timer_set_periodic(ms_timer_ptr_, false);
-    timer_set_callback(ms_timer_ptr_, timer_callback);
+    softtimer_set_periodic(ms_timer_ptr_, false);
+    softtimer_set_callback(ms_timer_ptr_, timer_callback);
     
     used_pin_ = UNUSED_PIN;
     
@@ -115,11 +116,11 @@ static void SetFrequency(uint16_t frequency) {
 }
 
 static void SetDuration(uint32_t duration) {
-	timer_stop(ms_timer_ptr_);
+    softtimer_stop(ms_timer_ptr_);
     if (duration != TONE_LENGTH_INFINITE) {
-        timer_set_interval(ms_timer_ptr_, duration);
-        timer_status_t status = timer_start(ms_timer_ptr_);
-		assert(status == TIMER_STATUS_OK);
+        softtimer_set_interval(ms_timer_ptr_, duration);
+        timer_status_t status = softtimer_start(ms_timer_ptr_);
+        assert(status == TIMER_STATUS_OK);
     }
 }
 
@@ -143,7 +144,7 @@ void noTone(Gpio_t pin) {
     if (SamePin(pin, used_pin_)) {
         TCCR2 &= PS_MODE_OFF;
         
-        timer_stop(ms_timer_ptr_);
+        softtimer_stop(ms_timer_ptr_);
         gpioPinModeSet(used_pin_, GPIO_MODE_IN);
         used_pin_ = UNUSED_PIN;
     }

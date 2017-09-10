@@ -1,5 +1,5 @@
-﻿/* 
- * Copyright (c) 2016, Denis Vasilkovskii
+/* 
+ * Copyright (c) 2017, Denis Vasilkovskii
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,34 +26,38 @@
  */
 
 /*
- * libtime.h
+ * softtimer.h
  *
- * Created: 12-Sep-16 23:29:03
+ * Created: 10-Sep-17 19:19:08
  *  Author: Denis Vasilkovskii
  */ 
 
 
-#ifndef LABLIB_LIBTIME_H
-#define LABLIB_LIBTIME_H
+#ifndef SOFTTIMER_H_
+#define SOFTTIMER_H_
 
+#include <stdbool.h>
 #include <stdint.h>
 
-/*! \brief Возвращает количество миллисекунд, прошедших со времени запуска
-программы. Время переполнения этого счетчика (сброса обратно в нуль) около
-50 дней.
+typedef enum {
+    TIMER_STATUS_OK,
+    TIMER_STATUS_NOT_FOUND,
+    TIMER_STATUS_NO_FREE_TIMERS,
+    TIMER_STATUS_NO_CALLBACK,
+    TIMER_STATUS_INCORRECT_INTERVAL,
+} timer_status_t;
 
-\return 32-битное целое без знака, равное числу миллисекунд, прошедших с
-момента подачи питания.
-*/
-uint32_t millis();
+struct timer_impl_t;
+typedef struct timer_impl_t softtimer_t;
+typedef void (*softtimer_callback_t)();
 
-/*! \brief Возвращает количество микросекунд, прошедших со времени запуска
-программы. Время переполнения этого счетчика (сброса обратно в нуль) около
-70 минут.
+softtimer_t * softtimer_alloc();
+timer_status_t softtimer_set_interval(softtimer_t * t, uint32_t interval);
+timer_status_t softtimer_set_callback(softtimer_t * t, softtimer_callback_t cb);
+timer_status_t softtimer_set_periodic(softtimer_t * t, bool is_periodic);
+timer_status_t softtimer_start(softtimer_t * t);
+bool softtimer_is_started(softtimer_t * t);
+timer_status_t softtimer_stop(softtimer_t * t);
+timer_status_t softtimer_free(softtimer_t * t);
 
-\param 32-битное целое без знака, равное числу микросекунд, прошедших с
-момента подачи питания.
-*/
-uint32_t micros();
-
-#endif /* LABLIB_LIBTIME_H */
+#endif /* SOFTTIMER_H_ */

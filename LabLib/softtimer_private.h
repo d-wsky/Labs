@@ -1,5 +1,5 @@
 ﻿/* 
- * Copyright (c) 2016, Denis Vasilkovskii
+ * Copyright (c) 2017, Denis Vasilkovskii
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,34 +26,32 @@
  */
 
 /*
- * libtime.h
+ * softtimer_private.h
  *
- * Created: 12-Sep-16 23:29:03
+ * Created: 10-Sep-17 20:06:50
  *  Author: Denis Vasilkovskii
  */ 
 
 
-#ifndef LABLIB_LIBTIME_H
-#define LABLIB_LIBTIME_H
+#ifndef SOFTTIMER_PRIVATE_H_
+#define SOFTTIMER_PRIVATE_H_
 
-#include <stdint.h>
+struct timer_impl_t {
+    struct {
+        uint8_t  is_periodic: 1;
+        uint8_t  is_started: 1;
+    };
+    uint32_t interval_ms;
+    uint32_t count;
+    softtimer_callback_t callback;
+};
 
-/*! \brief Возвращает количество миллисекунд, прошедших со времени запуска
-программы. Время переполнения этого счетчика (сброса обратно в нуль) около
-50 дней.
 
-\return 32-битное целое без знака, равное числу миллисекунд, прошедших с
-момента подачи питания.
-*/
-uint32_t millis();
+/*!\brief Внутренняя функция модуля таймера. */
+#define softtimer_timer_size()   (sizeof(struct timer_impl_t))
 
-/*! \brief Возвращает количество микросекунд, прошедших со времени запуска
-программы. Время переполнения этого счетчика (сброса обратно в нуль) около
-70 минут.
+/*!\brief Внутренняя функция модуля таймера. */
+void softtimer_tick(softtimer_t * t);
 
-\param 32-битное целое без знака, равное числу микросекунд, прошедших с
-момента подачи питания.
-*/
-uint32_t micros();
 
-#endif /* LABLIB_LIBTIME_H */
+#endif /* SOFTTIMER_PRIVATE_H_ */
