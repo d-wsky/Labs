@@ -86,5 +86,7 @@ void loop() {
                              char *: "%s",                   \
                              void *: "%p")
 
+#define LABLIB_MIN(a, b)    ((a) < (b)) ? (a) : (b)
+#define LABLIB_MAX(a, b)    ((a) > (b)) ? (a) : (b)
 
 #endif /* UTILS_H_ */

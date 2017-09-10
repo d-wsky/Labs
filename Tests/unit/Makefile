@@ -44,7 +44,8 @@ test_names = fsm_linear            \
              fsm_no_action         \
              fsm_guards            \
              fsm_events            \
-             fsm_any_state
+             fsm_any_state         \
+             tone_freq
 
 # исключаем флаг "только компил€ци€", чтобы на выходе был исполн€емый файл
 CFLAGS := $(filter-out -c,$(CFLAGS))

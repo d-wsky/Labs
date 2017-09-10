@@ -37,6 +37,7 @@
 #define LABLIB_LIBTIME_H
 
 #include <stdint.h>
+#include <stdbool.h>
 
 /*! \brief Возвращает количество миллисекунд, прошедших со времени запуска
 программы. Время переполнения этого счетчика (сброса обратно в нуль) около
@@ -55,5 +56,25 @@ uint32_t millis();
 момента подачи питания.
 */
 uint32_t micros();
+
+typedef enum {
+    TIMER_STATUS_OK,
+    TIMER_STATUS_NOT_FOUND,
+    TIMER_STATUS_NO_FREE_TIMERS,
+    TIMER_STATUS_NO_CALLBACK,
+	TIMER_STATUS_INCORRECT_INTERVAL
+} timer_status_t;
+
+struct timer_impl_t;
+typedef struct timer_impl_t timer_t;
+typedef void (*timer_callback_t)();
+
+timer_status_t timer_get(timer_t ** timer);
+timer_status_t timer_set_interval(timer_t * t, uint32_t interval);
+timer_status_t timer_set_callback(timer_t * t, timer_callback_t cb);
+timer_status_t timer_set_periodic(timer_t * t, bool is_periodic);
+timer_status_t timer_start(timer_t * t);
+timer_status_t timer_stop(timer_t * t);
+timer_status_t timer_release(timer_t * timer);
 
 #endif /* LABLIB_LIBTIME_H */

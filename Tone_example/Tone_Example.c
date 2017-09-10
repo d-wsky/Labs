@@ -1,4 +1,4 @@
-﻿/* 
+/* 
  * Copyright (c) 2016, Denis Vasilkovskii
  * All rights reserved.
  *
@@ -26,47 +26,43 @@
  */
 
 /*
- * LabLib.c
+ * Tone_example.c
  *
- * Created: 08-Aug-16 23:26:02
+ * Created: 30-Nov-16 20:47:49
  *  Author: Denis Vasilkovskii
  *
- *   About: Основной файл библиотеки. В нём содержится код, предназначенный для
- *          исполнения программы пользователя.
+ *   About: ������ ������������� ������� tone. ������ ������ 100 �� �� PINA.0
+ *          � ������� 10 ���, � ������ 10 ��� ����� ������� ���������� ������.
  */ 
 
+#include "tone.h"
+#include "gpio.h"
+#include "lcd.h"
+#include "delay.h"
 #include "structure.h"
-#include "interrupts.h"
 
-void setup() __attribute__ ((weak));
-void loop() __attribute__((weak));
-extern void initLibTime();
-extern void initTone();
+Gpio_t tone_pin = {.port = GPIO_PORTA, .pin = GPIO_PIN0};
+const lcdPinout_t lcdPinout = {
+	.rs = {GPIO_PORTC, GPIO_PIN0},
+	.rw = LCD_UNUSED_PIN,
+	.e  = {GPIO_PORTC, GPIO_PIN1},
+	.d0 = LCD_UNUSED_PIN,
+	.d1 = LCD_UNUSED_PIN,
+	.d2 = LCD_UNUSED_PIN,
+	.d3 = LCD_UNUSED_PIN,
+	.d4 = {GPIO_PORTC, GPIO_PIN4},
+	.d5 = {GPIO_PORTC, GPIO_PIN5},
+	.d6 = {GPIO_PORTC, GPIO_PIN6},
+	.d7 = {GPIO_PORTC, GPIO_PIN7},
+};
 
 void setup() {
-    // пустая функция, которую может переопределить пользователь библиотеки
+	lcdInit(&lcdPinout);
+	lcdBegin(16, 2);
+	lcdPrint("Tone example!");
 }
 
 void loop() {
-    // пустая функция, которую может переопределить пользователь библиотеки
-}
-
-static void internalSetup() {
-    initLibTime();
-    initTone();
-}
-
-int main(void)
-{
-    internalSetup();
-    
-    setup();
-
-    interruptsEnable();
-    
-    while (1) {
-        loop();
-    }
-
-    return 0;
+	tone(tone_pin, 100, 10000);
+	delayMs(20000);
 }

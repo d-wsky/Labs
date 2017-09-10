@@ -34,6 +34,8 @@
 
 #include "libtime.h"
 #include <avr/interrupt.h>
+#include <stddef.h>
+#include "assert.h"
 
 #define WGM_MODE_NORMAL        ((0 << WGM21) | (0 << WGM20))
 #define WGM_MODE_PH_COR_PWM    ((0 << WGM21) | (1 << WGM20))
@@ -67,6 +69,8 @@ static uint32_t millis_ = 0;
 typedef uint16_t timer_wide_t;
 #define TIMER_WIDE_MAX           UINT8_MAX
 
+static void timer_pool_interval_notify();
+
 void initLibTime() {
     // выбираем режим CTC с верхним значением, определяемым
     // регистром OCR3A
@@ -84,6 +88,8 @@ void initLibTime() {
 ISR(TIMER3_COMPA_vect) {
     micros_ += IRQ_INTERVAL;
     millis_++;
+    
+    timer_pool_interval_notify();
 }
 
 uint32_t micros() {
@@ -104,4 +110,170 @@ uint32_t millis() {
     uint32_t result = millis_;
     // todo end atomic
     return result;
+}
+
+
+struct timer_impl_t {
+    struct {
+        uint8_t  is_periodic: 1;
+        uint8_t  is_started: 1;
+    };
+    uint32_t         interval_ms;
+    uint32_t         count;
+    timer_callback_t callback;
+};
+
+struct timer_impl_t timer_pool[MAX_SOFT_TIMER_AMOUNT];
+typedef uint8_t timer_pool_it_t;
+
+#if MAX_SOFT_TIMER_AMOUNT <= 8
+typedef uint8_t timer_pool_map_t;
+#elif MAX_SOFT_TIMER_AMOUNT <= 16
+typedef uint16_t timer_pool_map_t;
+#elif MAX_SOFT_TIMER_AMOUNT <= 32
+typedef uint32_t timer_pool_map_t;
+#elif MAX_SOFT_TIMER_AMOUNT <= 64
+typedef uint64_t timer_pool_map_t;
+#else
+#error "MAX_SOFT_TIMER_AMOUNT must not exceed 64"
+#endif
+
+static timer_pool_map_t timer_pool_map_ = 0;
+
+static inline bool is_timer_busy(timer_pool_it_t i) {
+    return (timer_pool_map_ & (1 << i));
+}
+
+static inline void mark_timer_busy(timer_pool_it_t i) {
+    timer_pool_map_ |=   1 << i;
+}
+
+static inline void mark_timer_free(timer_pool_it_t i) {
+    timer_pool_map_ &= ~(1 << i);
+}
+
+static bool is_timer(timer_t * t) {
+    for (timer_pool_it_t i = 0; i < MAX_SOFT_TIMER_AMOUNT; i++) {
+        if (t == &timer_pool[i]) {
+            if (is_timer_busy(i)) {
+                return true;
+            }
+        }
+    }
+    
+    return false;
+}
+
+static timer_t * timer_pool_alloc() {
+    for (timer_pool_it_t i = 0; i < MAX_SOFT_TIMER_AMOUNT; i++) {
+        if (!is_timer_busy(i)) {
+            mark_timer_busy(i);
+            return &timer_pool[i];
+        }    
+    }
+    
+    return NULL;
+}
+
+static void timer_pool_free(timer_t * t) {
+    timer_pool_it_t i = (t - timer_pool) / sizeof(struct timer_impl_t);
+    mark_timer_free(i);
+}
+
+static void timer_pool_interval_notify() {
+    for (timer_pool_it_t i = 0; i < MAX_SOFT_TIMER_AMOUNT; i++) {
+        if (is_timer_busy(i)) {
+            if (!timer_pool[i].is_started) {
+                continue;
+            }
+            if (--timer_pool[i].count == 0) {
+                assert(timer_pool[i].callback != NULL);
+                timer_pool[i].callback();
+                if (timer_pool[i].is_periodic) {
+                    timer_pool[i].count = timer_pool[i].interval_ms;
+                }
+                else {
+                    timer_pool[i].is_started = false;
+                }
+            }
+        }
+    }
+}
+
+timer_status_t timer_get(timer_t ** timer) {
+    assert(timer != NULL);
+    
+    if ((*timer = timer_pool_alloc())) {
+        return TIMER_STATUS_OK;
+    }
+    
+    return TIMER_STATUS_NO_FREE_TIMERS;
+}
+
+timer_status_t timer_set_interval(timer_t * t, uint32_t interval) {
+    if (!is_timer(t)) {
+        return TIMER_STATUS_NOT_FOUND;
+    }
+	if (interval == 0) {
+		return TIMER_STATUS_INCORRECT_INTERVAL;
+	}
+    
+    t->interval_ms = interval;
+    return TIMER_STATUS_OK;
+}
+
+timer_status_t timer_set_callback(struct timer_impl_t * t, timer_callback_t cb) {
+    if (!is_timer(t)) {
+        return TIMER_STATUS_NOT_FOUND;
+    }
+    
+    t->callback = cb;
+    return TIMER_STATUS_OK;
+}
+
+timer_status_t timer_set_periodic(timer_t * t, bool is_periodic) {
+    if (!is_timer(t)) {
+        return TIMER_STATUS_NOT_FOUND;
+    }
+    
+    t->is_periodic = is_periodic;
+    return TIMER_STATUS_OK;
+}
+
+timer_status_t timer_start(timer_t * t) {
+    if (!is_timer(t)) {
+        return TIMER_STATUS_NOT_FOUND;
+    }
+    
+    if (!t->callback) {
+        return TIMER_STATUS_NO_CALLBACK;
+    }
+    
+    if (!t->is_started) {
+		if (t->interval_ms == 0) {
+			return TIMER_STATUS_INCORRECT_INTERVAL;
+		}
+        t->count = t->interval_ms;
+        t->is_started = true;
+    }
+    return TIMER_STATUS_OK;
+}
+
+timer_status_t timer_stop(timer_t * t) {
+    if (!is_timer(t)) {
+        return TIMER_STATUS_NOT_FOUND;
+    }
+    
+    t->is_started = false;
+    t->count = t->interval_ms;
+    return TIMER_STATUS_OK;
+}
+
+timer_status_t timer_release(timer_t * timer) {
+    if (!is_timer(timer)) {
+        return TIMER_STATUS_NOT_FOUND;
+    }
+
+    timer_pool_free(timer);
+    return TIMER_STATUS_OK;
 }

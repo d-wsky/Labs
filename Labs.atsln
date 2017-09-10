@@ -32,6 +32,8 @@ Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "LCD_Example", "LCD_Example\
 EndProject
 Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "Timer_Example", "Timer_Example\Timer_Example.cproj", "{4BC645AA-0175-41C7-8CCE-E96A37373981}"
 EndProject
+Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "Tone_example", "Tone_example\Tone_Example.cproj", "{35913262-4E3F-463C-9068-6B7EF09AE285}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|AVR = Debug|AVR
@@ -98,6 +100,10 @@ Global
 		{4BC645AA-0175-41C7-8CCE-E96A37373981}.Debug|AVR.Build.0 = Debug|AVR
 		{4BC645AA-0175-41C7-8CCE-E96A37373981}.Release|AVR.ActiveCfg = Release|AVR
 		{4BC645AA-0175-41C7-8CCE-E96A37373981}.Release|AVR.Build.0 = Release|AVR
+		{35913262-4E3F-463C-9068-6B7EF09AE285}.Debug|AVR.ActiveCfg = Debug|AVR
+		{35913262-4E3F-463C-9068-6B7EF09AE285}.Debug|AVR.Build.0 = Debug|AVR
+		{35913262-4E3F-463C-9068-6B7EF09AE285}.Release|AVR.ActiveCfg = Release|AVR
+		{35913262-4E3F-463C-9068-6B7EF09AE285}.Release|AVR.Build.0 = Release|AVR
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
